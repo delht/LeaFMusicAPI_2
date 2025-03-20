@@ -2,6 +2,16 @@ package de.lht.leafmusic3.repository;
 
 import de.lht.leafmusic3.entity.Album;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-public interface AlbumRepository extends JpaRepository<Album, String> {
+import java.util.List;
+
+public interface AlbumRepository extends JpaRepository<Album, Integer> {
+    List<Album> findByIdArtist(int artistId);
+
+    @Query(value = "SELECT * FROM albums ORDER BY RAND() LIMIT :limit", nativeQuery = true)
+    List<Album> findRandomAlbums(@Param("limit") int limit);
+
+    List<Album> findByNameContainingIgnoreCase(String name);
 }

@@ -26,4 +26,14 @@ public class AlbumService {
         return albumMapper.toDTOs(albums);
     }
 
+    public List<AlbumDTO> getAlbumsByArtist(int artistId) {
+        List<Album> albums = albumRepository.findByIdArtist(artistId);
+        return albumMapper.toDTOs(albums);
+    }
+
+    public List<AlbumDTO> getRandomAlbums(int limit){
+        List<Album> albums = albumRepository.findRandomAlbums(limit);
+        return albumMapper.toDTOs(albums);
+    }
+
 }
