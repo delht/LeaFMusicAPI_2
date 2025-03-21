@@ -1,11 +1,11 @@
 package de.lht.leafmusic3.controller;
 
 import de.lht.leafmusic3.dto.favoriteplaylist.FavoritePlaylistDTO;
+import de.lht.leafmusic3.entity.FavoritePlaylist;
 import de.lht.leafmusic3.service.FavoritePlaylistService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,4 +20,29 @@ public class FavoritePlaylistController {
         List<FavoritePlaylistDTO> favoritePlaylists = favoritePlaylistService.getAllFavoritePlaylists();
         return favoritePlaylists;
     }
+
+
+    @PostMapping("/add")
+    public ResponseEntity<FavoritePlaylist> addFavorite(
+            @RequestParam String idUser,
+            @RequestParam int idSong) {
+        FavoritePlaylist favorite = favoritePlaylistService.addSongToFavorites(idUser, idSong);
+        return ResponseEntity.ok(favorite);
+    }
+
+    @GetMapping("/{idUser}")
+    public ResponseEntity<List<FavoritePlaylist>> getFavorites(@PathVariable String idUser) {
+        List<FavoritePlaylist> favorites = favoritePlaylistService.getFavoritesByUser(idUser);
+        return ResponseEntity.ok(favorites);
+    }
+
+    @DeleteMapping("/remove")
+    public ResponseEntity<?> removeFavoriteSong(@RequestParam String idUser, @RequestParam int idSong) {
+        String result = favoritePlaylistService.removeFavoriteSong(idUser, idSong);
+        if (result.contains("không có")) {
+            return ResponseEntity.badRequest().body(result);
+        }
+        return ResponseEntity.ok(result);
+    }
+
 }

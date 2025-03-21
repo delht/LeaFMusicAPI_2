@@ -18,11 +18,11 @@ public class FavoritePlaylist {
     @Column(name = "id_playlist")
     private int idPlaylist;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = true)
     private String name;
 
     @Column(name = "id_user")
-    private int idUser;
+    private String idUser;
 
     @Column(name = "id_song")
     private int idSong;
