@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class SongDTO {
     private int idSong;
     private String name;
+    private int play;
     private String imageUrl;
     private String fileUrl;
     private LocalDateTime releaseDate;

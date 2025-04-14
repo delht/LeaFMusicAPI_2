@@ -23,6 +23,9 @@ public class Song {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "play")
+    private int play;
+
     @Column(name = "image_url")
     private String imageUrl;
 

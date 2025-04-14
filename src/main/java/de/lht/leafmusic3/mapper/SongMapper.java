@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface SongMapper {
-    SongMapper INSTANCE = Mappers.getMapper(SongMapper.class);
+//    SongMapper INSTANCE = Mappers.getMapper(SongMapper.class);
 
     SongDTO toDTO(Song song);
 

@@ -28,7 +28,12 @@ public class SongService {
 
     public SongDTO getSongById(int id) {
         Song song = songRepository.findById(id);
+
+        song.setPlay(song.getPlay() + 1);
+        songRepository.save(song);
+
         return songMapper.toDTO(song);
+
     }
 
     //Lấy danh sách bài hát ngẫu nhiên (5 hoặc 10 bài)
