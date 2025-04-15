@@ -46,20 +46,20 @@ public class UserService {
         }
     }
 
-//    public UserAccount registerUser(String username, String password) {
-//        if(userRepository.findByUsername(username).isPresent()) {
-//            throw new RuntimeException("Username already exists");
-//        }
-//
-//        String hashedPassword = encodeMD5(password);
-//
-//        UserAccount account = UserAccount.builder()
-//                .username(username)
-//                .password(hashedPassword)
-//                .role(Role.USER)
-//                .build();
-//        return userRepository.save(account);
-//    }
+    public UserAccount registerUser(String username, String password) {
+        if(userRepository.findByUsername(username).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        String hashedPassword = encodeMD5(password);
+
+        UserAccount account = UserAccount.builder()
+                .username(username)
+                .password(hashedPassword)
+                .role(Role.USER)
+                .build();
+        return userRepository.save(account);
+    }
 
 //    public UserAccount login(String username, String password) {
 //        String encodedPassword = encodeMD5(password);

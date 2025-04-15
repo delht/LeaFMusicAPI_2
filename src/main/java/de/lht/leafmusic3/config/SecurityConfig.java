@@ -22,13 +22,21 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/login", "/users/register").permitAll()
-                        .anyRequest().authenticated()
+                        // Public endpoints - không cần JWT
+                        .requestMatchers("/users/register", "/users/login").permitAll()
+                        .requestMatchers("/songs/**", "/albums/**", "/artists/**", "/genres/**", "/search/**").permitAll()
+
+                        // Private endpoints - cần JWT
+                        .requestMatchers("/users/**", "/favoritelists/**").authenticated()
+
+                        // Mọi request khác cũng cho phép nếu bạn muốn
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
