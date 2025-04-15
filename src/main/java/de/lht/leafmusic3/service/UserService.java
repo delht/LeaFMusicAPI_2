@@ -1,6 +1,7 @@
 package de.lht.leafmusic3.service;
 
 
+import de.lht.leafmusic3.config.JwtUtil;
 import de.lht.leafmusic3.dto.user.UserDTO;
 import de.lht.leafmusic3.entity.Role;
 import de.lht.leafmusic3.entity.UserAccount;
@@ -45,26 +46,37 @@ public class UserService {
         }
     }
 
-    public UserAccount registerUser(String username, String password) {
-        if(userRepository.findByUsername(username).isPresent()) {
-            throw new RuntimeException("Username already exists");
-        }
+//    public UserAccount registerUser(String username, String password) {
+//        if(userRepository.findByUsername(username).isPresent()) {
+//            throw new RuntimeException("Username already exists");
+//        }
+//
+//        String hashedPassword = encodeMD5(password);
+//
+//        UserAccount account = UserAccount.builder()
+//                .username(username)
+//                .password(hashedPassword)
+//                .role(Role.USER)
+//                .build();
+//        return userRepository.save(account);
+//    }
 
-        String hashedPassword = encodeMD5(password);
+//    public UserAccount login(String username, String password) {
+//        String encodedPassword = encodeMD5(password);
+//        return userRepository.findByUsername(username)
+//                .filter(user -> user.getPassword().equals(encodedPassword))
+//                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+//    }
 
-        UserAccount account = UserAccount.builder()
-                .username(username)
-                .password(hashedPassword)
-                .role(Role.USER)
-                .build();
-        return userRepository.save(account);
-    }
+    private final JwtUtil jwtUtil;
 
-    public UserAccount login(String username, String password) {
+    public String login(String username, String password) {
         String encodedPassword = encodeMD5(password);
-        return userRepository.findByUsername(username)
-                .filter(user -> user.getPassword().equals(encodedPassword))
+        UserAccount user = userRepository.findByUsername(username)
+                .filter(u -> u.getPassword().equals(encodedPassword))
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+
+        return jwtUtil.generateToken(user.getUsername());
     }
 
 }

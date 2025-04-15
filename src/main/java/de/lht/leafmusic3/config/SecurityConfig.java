@@ -1,30 +1,37 @@
 package de.lht.leafmusic3.config;
 
+import de.lht.leafmusic3.service.UserDetailServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-
-import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtFilter jwtFilter;
+    private final UserDetailServiceImpl userDetailService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Tắt CSRF nếu không cần thiết
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/public/**").permitAll()  // Cho phép truy cập không cần xác thực
-//                        .requestMatchers("/api/user/**").hasRole("USER")  // Chỉ cho phép USER truy cập
-//                        .requestMatchers("/api/admin/**").hasRole("ADMIN") // Chỉ cho phép ADMIN truy cập
-//                        .requestMatchers("/api/users").authenticated() // Yêu cầu xác thực cho /api/users
-//                        .anyRequest().authenticated()  // Các yêu cầu khác yêu cầu đăng nhập
-                        .anyRequest().permitAll()  // Các yêu cầu khác yêu cầu đăng nhập
+                        .requestMatchers("/users/login", "/users/register").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .formLogin(withDefaults()) // Sử dụng trang đăng nhập mặc định của Spring Security
-                .logout(logout -> logout.permitAll()); // Cho phép logout
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 }
