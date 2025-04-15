@@ -13,4 +13,11 @@ public class SearchResultDTO {
     private List<SongDTO> songs;
     private List<ArtistDTO> artists;
     private List<AlbumDTO> albums;
+
+    public SearchResultDTO() {
+        this.songs = List.of();
+        this.artists = List.of();
+        this.albums = List.of();
+    }
+
 }

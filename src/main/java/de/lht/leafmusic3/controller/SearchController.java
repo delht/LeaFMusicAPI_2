@@ -14,6 +14,12 @@ public class SearchController {
 
     @GetMapping
     public ResponseEntity<SearchResultDTO> search(@RequestParam String keyword) {
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            // Trả về danh sách rỗng khi từ khóa trống
+            return ResponseEntity.ok(new SearchResultDTO());
+        }
+
         return ResponseEntity.ok(searchService.searchByName(keyword));
     }
 }
