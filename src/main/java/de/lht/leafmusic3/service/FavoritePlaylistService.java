@@ -20,35 +20,53 @@ public class FavoritePlaylistService {
 
     public List<FavoritePlaylistDTO> getAllFavoritePlaylists() {
         List<FavoritePlaylist> favoritePlaylists = favoritePlaylistRepository.findAll();
-        System.out.println(favoritePlaylists);
+        log.info("Fetched {} favorite playlists", favoritePlaylists.size());
         return favoritePlaylistMapper.toDTOs(favoritePlaylists);
     }
 
-
     public FavoritePlaylist addSongToFavorites(String idUser, int idSong) {
+        // Kiểm tra xem bài hát đã có trong danh sách yêu thích của người dùng hay chưa
+        Optional<FavoritePlaylist> existingFavorite = favoritePlaylistRepository.findByIdUserAndIdSong(idUser, idSong);
+
+        if (existingFavorite.isPresent()) {
+            // Nếu bài hát đã có trong danh sách yêu thích, trả về thông báo
+            log.warn("Song {} is already in favorites for user {}", idSong, idUser);
+            throw new IllegalArgumentException("Bài hát đã có trong danh sách yêu thích!");
+        }
+
+        // Nếu bài hát chưa có, thêm vào danh sách yêu thích
         FavoritePlaylist favorite = new FavoritePlaylist();
         favorite.setName("Temp");
         favorite.setIdUser(idUser);
         favorite.setIdSong(idSong);
+        log.info("Adding song {} to favorites for user {}", idSong, idUser);
+
         return favoritePlaylistRepository.save(favorite);
     }
 
+
     public List<FavoritePlaylist> getFavoritesByUser(String idUser) {
+        log.info("Fetching favorites for user {}", idUser);
         return favoritePlaylistRepository.findByIdUser(idUser);
     }
 
     public String removeFavoriteSong(String idUser, int idSong) {
-        log.info("Xóa bài hát: idUser={}, idSong={}", idUser, idSong);
+        log.info("Attempting to remove favorite song: idUser={}, idSong={}", idUser, idSong);
 
         Optional<FavoritePlaylist> favorite = favoritePlaylistRepository.findByIdUserAndIdSong(idUser, idSong);
         if (favorite.isEmpty()) {
-            log.warn("Không tìm thấy bài hát yêu thích của user {}", idUser);
+            log.warn("No favorite song found for user {} and song {}", idUser, idSong);
             return "Bài hát không có trong danh sách yêu thích!";
         }
 
-        favoritePlaylistRepository.delete(favorite.get());
-        log.info("Đã xóa bài hát {} khỏi danh sách yêu thích của user {}", idSong, idUser);
-        return "Đã xóa bài hát khỏi danh sách yêu thích!";
+        try {
+            favoritePlaylistRepository.delete(favorite.get());
+            log.info("Successfully removed song {} from user {}'s favorites", idSong, idUser);
+            return "Đã xóa bài hát khỏi danh sách yêu thích!";
+        } catch (Exception e) {
+            log.error("Error occurred while deleting favorite song for user {}: {}", idUser, e.getMessage());
+            return "Có lỗi xảy ra khi xóa bài hát!";
+        }
     }
-
 }
+

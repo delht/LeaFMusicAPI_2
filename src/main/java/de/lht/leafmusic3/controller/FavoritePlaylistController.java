@@ -23,12 +23,18 @@ public class FavoritePlaylistController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<FavoritePlaylist> addFavorite(
+    public ResponseEntity<String> addFavorite(
             @RequestParam String idUser,
             @RequestParam int idSong) {
-        FavoritePlaylist favorite = favoritePlaylistService.addSongToFavorites(idUser, idSong);
-        return ResponseEntity.ok(favorite);
+        try {
+            FavoritePlaylist favorite = favoritePlaylistService.addSongToFavorites(idUser, idSong);
+            return ResponseEntity.ok("Bài hát đã được thêm vào danh sách yêu thích!");
+        } catch (IllegalArgumentException e) {
+            // Nếu bài hát đã có, trả về thông báo lỗi
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
+
 
     @GetMapping("/{idUser}")
     public ResponseEntity<List<FavoritePlaylist>> getFavorites(@PathVariable String idUser) {
