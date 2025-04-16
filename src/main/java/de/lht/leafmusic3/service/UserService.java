@@ -91,10 +91,10 @@ public class UserService {
 
     private final JwtUtil jwtUtil;
 
-    public LoginResponse login(String username, String password) {
+    public LoginResponse login(String email, String password) {
         String encodedPassword = encodeMD5(password);
 
-        UserAccount user = userRepository.findByUsername(username)
+        UserAccount user = userRepository.findByEmail(email)
                 .filter(u -> u.getPassword().equals(encodedPassword))
                 .orElseThrow(() -> new RuntimeException("Lỗi xác thực"));
 

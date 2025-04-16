@@ -42,7 +42,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserAccount user) {
         try {
-            return ResponseEntity.ok(userService.login(user.getUsername(), user.getPassword()));
+            return ResponseEntity.ok(userService.login(user.getEmail(), user.getPassword()));
         } catch (Exception e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }
