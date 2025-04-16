@@ -1,6 +1,7 @@
 package de.lht.leafmusic3.controller;
 
 import de.lht.leafmusic3.dto.favoriteplaylist.FavoritePlaylistDTO;
+import de.lht.leafmusic3.dto.song.SongDTO;
 import de.lht.leafmusic3.entity.FavoritePlaylist;
 import de.lht.leafmusic3.service.FavoritePlaylistService;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +36,6 @@ public class FavoritePlaylistController {
         }
     }
 
-
-    @GetMapping("/{idUser}")
-    public ResponseEntity<List<FavoritePlaylist>> getFavorites(@PathVariable String idUser) {
-        List<FavoritePlaylist> favorites = favoritePlaylistService.getFavoritesByUser(idUser);
-        return ResponseEntity.ok(favorites);
-    }
-
     @DeleteMapping("/remove")
     public ResponseEntity<?> removeFavoriteSong(@RequestParam String idUser, @RequestParam int idSong) {
         String result = favoritePlaylistService.removeFavoriteSong(idUser, idSong);
@@ -49,6 +43,19 @@ public class FavoritePlaylistController {
             return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
+    }
+
+
+    @GetMapping("/list/{idUser}")
+    public ResponseEntity<List<FavoritePlaylist>> getFavorites(@PathVariable String idUser) {
+        List<FavoritePlaylist> favorites = favoritePlaylistService.getFavoritesByUser(idUser);
+        return ResponseEntity.ok(favorites);
+    }
+
+    @GetMapping("/songs/{idUser}")
+    public ResponseEntity<List<SongDTO>> getSongs(@PathVariable String idUser) {
+        List<SongDTO> songs = favoritePlaylistService.getFavoriteSongs(idUser);
+        return ResponseEntity.ok(songs);
     }
 
 }
