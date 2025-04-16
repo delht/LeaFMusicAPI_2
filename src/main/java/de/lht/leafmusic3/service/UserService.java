@@ -47,20 +47,40 @@ public class UserService {
         }
     }
 
-    public UserAccount registerUser(String username, String password) {
-        if(userRepository.findByUsername(username).isPresent()) {
-            throw new RuntimeException("Username already exists");
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        return email != null && email.matches(emailRegex);
+    }
+
+    //    ===================================================================================
+
+    public UserAccount registerUser(String email, String password) {
+        //Kiểm tra định dạng email
+        if (!isValidEmail(email)) {
+            throw new RuntimeException("Tài khoản đăng ký phải là một địa chỉ email hợp lệ");
         }
+
+        //Kiểm tra trùng email
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new RuntimeException("Email đã tồn tại");
+        }
+
+        //Lấy phần trước @ làm username
+        String username = email.split("@")[0];
 
         String hashedPassword = encodeMD5(password);
 
         UserAccount account = UserAccount.builder()
                 .username(username)
                 .password(hashedPassword)
+                .email(email)
                 .role(Role.USER)
                 .build();
+
         return userRepository.save(account);
     }
+
+
 
 //    public UserAccount login(String username, String password) {
 //        String encodedPassword = encodeMD5(password);
@@ -78,10 +98,10 @@ public class UserService {
                 .filter(u -> u.getPassword().equals(encodedPassword))
                 .orElseThrow(() -> new RuntimeException("Lỗi xác thực"));
 
-        String token = jwtUtil.generateToken(user.getUsername(),user.getIdUser());
+        String token = jwtUtil.generateToken(user.getUsername(),user.getIdUser(), user.getEmail());
 
 //        return jwtUtil.generateToken(user.getUsername());
-        return new LoginResponse(token, user.getUsername(), user.getIdUser());
+        return new LoginResponse(token, user.getUsername(), user.getIdUser(), user.getEmail());
     }
 
 }

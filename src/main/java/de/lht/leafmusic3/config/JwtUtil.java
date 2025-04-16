@@ -22,7 +22,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    public String generateToken(String username, String idUser) {
+    public String generateToken(String username, String idUser, String email) {
         Date now = new Date();
         Date expirationTime = new Date(now.getTime() + EXPIRATION * 1000);  // Chuyển đổi sang milliseconds
 
@@ -33,6 +33,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("idUser", idUser)
+                .claim("email", email)
                 .setIssuedAt(now)
                 .setExpiration(expirationTime)
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
@@ -48,14 +49,6 @@ public class JwtUtil {
                 .getSubject();
     }
 
-    public String extractIdUser(String token) {
-        return (String) Jwts.parserBuilder()
-                .setSigningKey(getSignKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("idUser");  // Lấy idUser từ claim
-    }
 
     public boolean validateToken(String token) {
         try {
