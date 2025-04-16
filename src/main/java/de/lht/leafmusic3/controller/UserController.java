@@ -33,7 +33,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserAccount user) {
         try {
-            return ResponseEntity.ok(userService.registerUser(user.getUsername(), user.getPassword()));
+            return ResponseEntity.ok(userService.registerUser(user.getEmail(), user.getPassword()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
