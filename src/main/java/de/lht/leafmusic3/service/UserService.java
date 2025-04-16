@@ -2,6 +2,7 @@ package de.lht.leafmusic3.service;
 
 
 import de.lht.leafmusic3.config.JwtUtil;
+import de.lht.leafmusic3.dto.login.LoginResponse;
 import de.lht.leafmusic3.dto.user.UserDTO;
 import de.lht.leafmusic3.entity.Role;
 import de.lht.leafmusic3.entity.UserAccount;
@@ -70,13 +71,17 @@ public class UserService {
 
     private final JwtUtil jwtUtil;
 
-    public String login(String username, String password) {
+    public LoginResponse login(String username, String password) {
         String encodedPassword = encodeMD5(password);
+
         UserAccount user = userRepository.findByUsername(username)
                 .filter(u -> u.getPassword().equals(encodedPassword))
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+                .orElseThrow(() -> new RuntimeException("Lỗi xác thực"));
 
-        return jwtUtil.generateToken(user.getUsername());
+        String token = jwtUtil.generateToken(user.getUsername(),user.getIdUser());
+
+//        return jwtUtil.generateToken(user.getUsername());
+        return new LoginResponse(token, user.getUsername(), user.getIdUser());
     }
 
 }

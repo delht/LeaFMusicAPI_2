@@ -2,7 +2,6 @@ package de.lht.leafmusic3.config;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -23,7 +22,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, String idUser) {
         Date now = new Date();
         Date expirationTime = new Date(now.getTime() + EXPIRATION * 1000);  // Chuyển đổi sang milliseconds
 
@@ -33,6 +32,7 @@ public class JwtUtil {
 
         return Jwts.builder()
                 .setSubject(username)
+                .claim("idUser", idUser)
                 .setIssuedAt(now)
                 .setExpiration(expirationTime)
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
@@ -46,6 +46,15 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    public String extractIdUser(String token) {
+        return (String) Jwts.parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("idUser");  // Lấy idUser từ claim
     }
 
     public boolean validateToken(String token) {
