@@ -53,4 +53,22 @@ public class UserController {
         return ResponseEntity.ok("Logged out successfully");
     }
 
+//    =======================================================================
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(
+            @RequestParam String id,
+            @RequestParam String old,
+            @RequestParam String newpass
+    ) {
+        try {
+            userService.changePassword(id, old, newpass);
+            return ResponseEntity.ok("Đổi mật khẩu thành công");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+
 }

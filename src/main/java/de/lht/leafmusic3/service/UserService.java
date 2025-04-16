@@ -23,6 +23,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final JwtUtil jwtUtil;
 
 //    public UserService(UserRepository userRepository, UserMapper userMapper) {
 //        this.userRepository = userRepository;
@@ -55,12 +56,11 @@ public class UserService {
     //    ===================================================================================
 
     public UserAccount registerUser(String email, String password) {
-        //Kiểm tra định dạng email
+
         if (!isValidEmail(email)) {
             throw new RuntimeException("Tài khoản đăng ký phải là một địa chỉ email hợp lệ");
         }
 
-        //Kiểm tra trùng email
         if (userRepository.findByEmail(email).isPresent()) {
             throw new RuntimeException("Email đã tồn tại");
         }
@@ -80,17 +80,6 @@ public class UserService {
         return userRepository.save(account);
     }
 
-
-
-//    public UserAccount login(String username, String password) {
-//        String encodedPassword = encodeMD5(password);
-//        return userRepository.findByUsername(username)
-//                .filter(user -> user.getPassword().equals(encodedPassword))
-//                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
-//    }
-
-    private final JwtUtil jwtUtil;
-
     public LoginResponse login(String email, String password) {
         String encodedPassword = encodeMD5(password);
 
@@ -103,5 +92,25 @@ public class UserService {
 //        return jwtUtil.generateToken(user.getUsername());
         return new LoginResponse(token, user.getUsername(), user.getIdUser(), user.getEmail());
     }
+
+
+    public void changePassword(String id, String oldPassword, String newPassword) {
+        UserAccount user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
+        String oldEncoded = encodeMD5(oldPassword);
+        if (!user.getPassword().equals(oldEncoded)) {
+            throw new RuntimeException("Mật khẩu cũ không đúng");
+        }
+
+        String newEncoded = encodeMD5(newPassword);
+        user.setPassword(newEncoded);
+
+        userRepository.save(user);
+    }
+
+
+
+
 
 }
