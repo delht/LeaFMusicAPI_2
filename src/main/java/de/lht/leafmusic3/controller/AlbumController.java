@@ -45,7 +45,7 @@ public class AlbumController {
 //    ===========================================================================================
 
     @Autowired
-    private ObjectMapper objectMapper; // <-- dùng ObjectMapper đã cấu hình
+    private ObjectMapper objectMapper;
 
     @PostMapping("/add")
     public ResponseEntity<?> addAlbum(

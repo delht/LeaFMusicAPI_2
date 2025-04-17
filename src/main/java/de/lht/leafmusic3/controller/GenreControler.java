@@ -3,9 +3,7 @@ package de.lht.leafmusic3.controller;
 import de.lht.leafmusic3.dto.genre.GenreDTO;
 import de.lht.leafmusic3.service.GenreService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,4 +19,23 @@ public class GenreControler {
         List<GenreDTO> genres = genreService.getAllGenres();
         return genres;
     }
+
+
+//    =============================================================================================
+
+    @PostMapping("/add")
+    public GenreDTO addGenre(@RequestBody GenreDTO genreDTO) {
+        return genreService.addGenre(genreDTO);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteGenre(@PathVariable int id) {
+        genreService.deleteGenre(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public GenreDTO updateGenre(@PathVariable int id, @RequestBody GenreDTO genreDTO) {
+        return genreService.updateGenre(id, genreDTO);
+    }
+
 }

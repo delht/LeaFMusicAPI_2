@@ -22,10 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-@Slf4j
-@Service
-@RequiredArgsConstructor //bo autowired
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+    @Slf4j
+    @Service
+    @RequiredArgsConstructor //bo autowired
+    @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AlbumService {
     private final AlbumRepository albumRepository;
     private final AlbumMapper albumMapper;

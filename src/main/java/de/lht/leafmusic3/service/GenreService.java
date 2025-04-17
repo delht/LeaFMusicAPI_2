@@ -20,4 +20,29 @@ public class GenreService {
         System.out.println(genres);
         return genreMapper.toDTOs(genres);
     }
+
+    // ============================================================================================
+
+    public GenreDTO addGenre(GenreDTO genreDTO) {
+        Genre genre = new Genre();
+        genre.setName(genreDTO.getName());
+        Genre saved = genreRepository.save(genre);
+        return genreMapper.toDTO(saved);
+    }
+
+    public void deleteGenre(int id) {
+        genreRepository.deleteById(String.valueOf(id));
+    }
+
+    public GenreDTO updateGenre(int id, GenreDTO genreDTO) {
+        Genre genre = genreRepository.findById(String.valueOf(id))
+                .orElseThrow(() -> new RuntimeException("Khoong tim thay the loai vs id: " + id));
+        genre.setName(genreDTO.getName());
+        Genre updated = genreRepository.save(genre);
+        return genreMapper.toDTO(updated);
+    }
+
+
+
+
 }
