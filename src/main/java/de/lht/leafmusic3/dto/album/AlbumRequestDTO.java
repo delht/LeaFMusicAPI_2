@@ -6,10 +6,8 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class AlbumDTO {
-    private int idAlbum;
+public class AlbumRequestDTO {
     private String name;
-    private String imageUrl;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime releaseDate;
