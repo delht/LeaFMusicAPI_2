@@ -12,11 +12,11 @@ import java.util.List;
 public interface AlbumMapper {
     AlbumMapper INSTANCE = Mappers.getMapper(AlbumMapper.class); //chưa dùng
 
-//    @Mapping(source = "idAlbum", target = "idAlbum")
-//    @Mapping(source = "name", target = "name")
-//    @Mapping(source = "imageUrl", target = "imageUrl")
-//    @Mapping(source = "releaseDate", target = "releaseDate")
-//    @Mapping(source = "idArtist", target = "idArtist")
+    @Mapping(source = "idAlbum", target = "idAlbum")
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "imageUrl", target = "imageUrl")
+    @Mapping(source = "releaseDate", target = "releaseDate")
+    @Mapping(source = "idArtist", target = "idArtist")
     AlbumDTO toDTO(Album album);
 
     List<AlbumDTO> toDTOs(List<Album> albums);

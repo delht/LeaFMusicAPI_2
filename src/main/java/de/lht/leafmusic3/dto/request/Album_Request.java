@@ -1,5 +1,4 @@
-package de.lht.leafmusic3.dto.song;
-
+package de.lht.leafmusic3.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,18 +6,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class SongDTO {
-    private int idSong;
+public class Album_Request {
+    private int idAlbum;
     private String name;
-    private int play;
     private String imageUrl;
-    private String fileUrl;
     private LocalDateTime releaseDate;
     private int idArtist;
-    private int idAlbum;
-    private int idGenre;
-
 }
