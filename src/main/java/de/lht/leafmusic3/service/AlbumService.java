@@ -3,6 +3,7 @@ package de.lht.leafmusic3.service;
 import de.lht.leafmusic3.cloud.GetPubID;
 import de.lht.leafmusic3.cloud.repo.DeleteFile;
 import de.lht.leafmusic3.cloud.repo.UploadFile;
+import de.lht.leafmusic3.dto.album.Album2DTO;
 import de.lht.leafmusic3.dto.album.AlbumDTO;
 import de.lht.leafmusic3.dto.album.AlbumRequestDTO;
 import de.lht.leafmusic3.dto.request.Album_Request;
@@ -41,6 +42,12 @@ public class AlbumService {
         return albumMapper.toDTOs(albums);
     }
 
+    public List<Album2DTO> getAllAlbums2() {
+        List<Album2DTO> albums = albumRepository.findAllAlbum();
+        System.out.println("Dữ liệu album: " + albums);
+        return albums;
+    }
+
     public List<AlbumDTO> getAlbumsByArtist(int artistId) {
         List<Album> albums = albumRepository.findByIdArtist(artistId);
         return albumMapper.toDTOs(albums);
@@ -50,6 +57,13 @@ public class AlbumService {
         List<Album> albums = albumRepository.findRandomAlbums(limit);
         return albumMapper.toDTOs(albums);
     }
+
+    public AlbumDTO getAlbumById(int albumId) {
+        Album album = albumRepository.findById(albumId).orElse(null);
+        return albumMapper.toDTO(album);
+    }
+
+
 
 //    =================================================================================
 

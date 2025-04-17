@@ -1,6 +1,7 @@
 package de.lht.leafmusic3.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.lht.leafmusic3.dto.album.Album2DTO;
 import de.lht.leafmusic3.dto.album.AlbumDTO;
 import de.lht.leafmusic3.dto.album.AlbumRequestDTO;
 import de.lht.leafmusic3.entity.Album;
@@ -32,6 +33,11 @@ public class AlbumController {
         return albums;
     }
 
+    @GetMapping("/v2/all")
+    public List<Album2DTO> getAllAlbumsV2() {
+        return albumService.getAllAlbums2();
+    }
+
     @GetMapping("/artist/{id}")
     public ResponseEntity<List<AlbumDTO>> getAlbumByArtistId(@PathVariable int id) {
         return ResponseEntity.ok(albumService.getAlbumsByArtist(id));
@@ -42,12 +48,20 @@ public class AlbumController {
         return albumService.getRandomAlbums(limit);
     }
 
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AlbumDTO> getAlbumById(@PathVariable int id) {
+        return ResponseEntity.ok(albumService.getAlbumById(id));
+    }
+
+
+
 //    ===========================================================================================
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @PostMapping("/add")
+    @PostMapping("/auth/add")
     public ResponseEntity<?> addAlbum(
             @RequestParam("img") MultipartFile img,
             @RequestParam("album") String albumRequestJson) {
@@ -68,7 +82,7 @@ public class AlbumController {
     }
 
 
-    @DeleteMapping("/delete/id/{id}")
+    @DeleteMapping("/auth/delete/id/{id}")
     public ResponseEntity<?> deleteAlbum(@PathVariable("id") int id) {
         try {
             albumService.deleteAlbum(id);
@@ -78,7 +92,7 @@ public class AlbumController {
         }
     }
 
-    @PutMapping("/update/id/{id}")
+    @PutMapping("/auth/update/id/{id}")
     public ResponseEntity<?> updateAlbum(
             @PathVariable int id,
             @RequestParam(value = "img", required = false) MultipartFile img,

@@ -1,7 +1,9 @@
 package de.lht.leafmusic3.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.lht.leafmusic3.dto.album.Album2DTO;
 import de.lht.leafmusic3.dto.album.AlbumRequestDTO;
+import de.lht.leafmusic3.dto.artist.Artist2DTO;
 import de.lht.leafmusic3.dto.artist.ArtistDTO;
 import de.lht.leafmusic3.dto.artist.ArtistRequestDTO;
 import de.lht.leafmusic3.dto.song.SongDTO;
@@ -34,6 +36,11 @@ public class ArtistController {
         return artists;
     }
 
+    @GetMapping("/v2/all")
+    public List<Artist2DTO> getAllArtistsV2() {
+        return artistService.getAllArtist2();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ArtistDTO> getArtistById(@PathVariable String id) {
         ArtistDTO artist = artistService.getArtistById(id);
@@ -50,7 +57,7 @@ public class ArtistController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @PostMapping("/add")
+    @PostMapping("/auth/add")
     public ResponseEntity<?> addArtist(
             @RequestParam("img") MultipartFile img,
             @RequestParam("artist") String artistRequestJson) {
@@ -70,7 +77,7 @@ public class ArtistController {
         }
     }
 
-    @DeleteMapping("/delete/id/{id}")
+    @DeleteMapping("/auth/delete/id/{id}")
     public ResponseEntity<?> deleteArtist(@PathVariable("id") String id) {
         try {
             artistService.deleteArtist(id);
@@ -80,7 +87,7 @@ public class ArtistController {
         }
     }
 
-    @PutMapping("/update/id/{id}")
+    @PutMapping("/auth/update/id/{id}")
     public ResponseEntity<?> updateArtist(
             @PathVariable String id,
             @RequestParam(value = "img", required = false) MultipartFile img,

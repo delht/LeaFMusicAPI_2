@@ -90,7 +90,7 @@ public class UserService {
         String token = jwtUtil.generateToken(user.getUsername(),user.getIdUser(), user.getEmail());
 
 //        return jwtUtil.generateToken(user.getUsername());
-        return new LoginResponse(token, user.getUsername(), user.getIdUser(), user.getEmail());
+        return new LoginResponse(token, user.getUsername(), user.getIdUser(), user.getEmail(), String.valueOf(user.getRole()));
     }
 
 
