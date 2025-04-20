@@ -50,6 +50,11 @@ public class SongController {
         return ResponseEntity.ok(songService.findSongsByAlbum(id));
     }
 
+    @GetMapping("/genre/{id}")
+    public ResponseEntity<List<SongDTO>> getSongsByGenreId(@PathVariable int id) {
+        return ResponseEntity.ok(songService.findSongsByGenre(id));
+    }
+
 //    ===========================================================================================
 
     @Autowired
