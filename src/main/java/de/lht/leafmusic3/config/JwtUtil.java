@@ -34,6 +34,7 @@ public class JwtUtil {
                 .setSubject(username)
                 .claim("idUser", idUser)
                 .claim("email", email)
+//                .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(expirationTime)
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)

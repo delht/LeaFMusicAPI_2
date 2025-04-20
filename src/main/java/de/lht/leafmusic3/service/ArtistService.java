@@ -3,7 +3,9 @@ package de.lht.leafmusic3.service;
 import de.lht.leafmusic3.cloud.GetPubID;
 import de.lht.leafmusic3.cloud.repo.DeleteFile;
 import de.lht.leafmusic3.cloud.repo.UploadFile;
+import de.lht.leafmusic3.dto.album.Album2DTO;
 import de.lht.leafmusic3.dto.album.AlbumRequestDTO;
+import de.lht.leafmusic3.dto.artist.Artist2DTO;
 import de.lht.leafmusic3.dto.artist.ArtistDTO;
 import de.lht.leafmusic3.dto.artist.ArtistRequestDTO;
 import de.lht.leafmusic3.dto.song.SongDTO;
@@ -40,6 +42,14 @@ public class ArtistService {
         System.out.println(artists);
         return artistMapper.toDTOs(artists);
     }
+
+    public List<Artist2DTO> getAllArtist2() {
+        List<Artist2DTO> artist = artistRepository.findAllArtist();
+        System.out.println("Dữ liệu artist: " + artist);
+        return artist;
+    }
+
+
 
     public ArtistDTO getArtistById(String id) {
         String artistId = String.valueOf(id);
@@ -80,18 +90,36 @@ public class ArtistService {
 
     public void deleteArtist(String id) throws IOException {
         Artist artist = artistRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Khong tim thay artist co id: "+id));
+                .orElseThrow(() -> new RuntimeException("Khong tim thay artist co id: " + id));
 
         String folderImg = "LeaFMusic2/Images/Artist/";
         String fileUrlImg = artist.getImageUrl();
-        String publicIdImg = getPubID.layPublicIdTuURL(fileUrlImg, folderImg);
 
-        log.info("Url file cần xóa {}", fileUrlImg);
-        deleteFile.deleteFile(publicIdImg);
+        log.info("➡ Bắt đầu xóa artist với ID {}", id);
+        log.info("URL ảnh cũ: {}", fileUrlImg);
+        log.info("FolderImg cần tìm: {}", folderImg);
+
+        if (fileUrlImg != null && !fileUrlImg.isEmpty()) {
+            int folderIndex = fileUrlImg.indexOf(folderImg);
+            int dotIndex = fileUrlImg.lastIndexOf(".");
+            log.info("Vị trí folder trong URL: {}", folderIndex);
+            log.info("Vị trí dấu chấm cuối: {}", dotIndex);
+
+            if (folderIndex != -1 && dotIndex != -1 && folderIndex < dotIndex) {
+                String publicIdImg = getPubID.layPublicIdTuURL(fileUrlImg, folderImg);
+                deleteFile.deleteFile(publicIdImg);
+                log.info("✅ Đã xóa file ảnh với public ID: {}", publicIdImg);
+            } else {
+                log.warn("⚠ Không thể trích xuất public ID từ URL ảnh: {}. Bỏ qua xóa ảnh.", fileUrlImg);
+            }
+        } else {
+            log.info("Artist không có ảnh để xóa.");
+        }
 
         artistRepository.delete(artist);
-        log.info("Album với ID {} đã được xóa thành công.", id);
+        log.info("✅ Artist với ID {} đã được xóa khỏi hệ thống.", id);
     }
+
 
     @Transactional
     public Artist updateArtist(String id, MultipartFile img, ArtistRequestDTO artistRequestDTO) throws IOException {
@@ -106,11 +134,26 @@ public class ArtistService {
             String folderImg = "LeaFMusic2/Images/Album/";
             String oldImageUrl = artist.getImageUrl();
 
+            log.info("➡ Bắt đầu xử lý ảnh mới");
+            log.info("Old image URL: {}", oldImageUrl);
+            log.info("Folder path cần tìm: {}", folderImg);
+
             // Xóa ảnh cũ
             if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
-                String publicIdImg = getPubID.layPublicIdTuURL(oldImageUrl, folderImg);
-                deleteFile.deleteFile(publicIdImg);
-                log.info("Đã xóa ảnh cũ: {}", publicIdImg);
+                int folderIndex = oldImageUrl.indexOf(folderImg);
+                int dotIndex = oldImageUrl.lastIndexOf(".");
+                log.info("Vị trí folder trong URL: {}", folderIndex);
+                log.info("Vị trí dấu chấm cuối trong URL: {}", dotIndex);
+
+                if (folderIndex != -1 && dotIndex != -1 && folderIndex < dotIndex) {
+                    String publicIdImg = getPubID.layPublicIdTuURL(oldImageUrl, folderImg);
+                    deleteFile.deleteFile(publicIdImg);
+                    log.info("Đã xóa ảnh cũ: {}", publicIdImg);
+                } else {
+                    log.warn("⚠ Không thể lấy publicId từ URL: {}, bỏ qua xoá ảnh cũ.", oldImageUrl);
+                }
+            } else {
+                log.info("Không có ảnh cũ để xóa.");
             }
 
             // Upload ảnh mới
@@ -120,6 +163,7 @@ public class ArtistService {
         } else {
             log.info("Không có ảnh mới, giữ nguyên ảnh cũ.");
         }
+
 
         return artistRepository.save(artist);
     }

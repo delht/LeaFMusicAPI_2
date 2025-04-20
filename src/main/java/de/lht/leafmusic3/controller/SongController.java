@@ -50,12 +50,17 @@ public class SongController {
         return ResponseEntity.ok(songService.findSongsByAlbum(id));
     }
 
+    @GetMapping("/genre/{id}")
+    public ResponseEntity<List<SongDTO>> getSongsByGenreId(@PathVariable int id) {
+        return ResponseEntity.ok(songService.findSongsByGenre(id));
+    }
+
 //    ===========================================================================================
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @PostMapping("/add")
+    @PostMapping("/auth/add")
     public ResponseEntity<?> addSong(
             @RequestParam("img") MultipartFile img,
             @RequestParam("audio") MultipartFile audio,
@@ -78,7 +83,7 @@ public class SongController {
         }
     }
 
-    @DeleteMapping("/delete/id/{id}")
+    @DeleteMapping("/auth/delete/id/{id}")
     public ResponseEntity<?> deleteSong(@PathVariable("id") int id) {
         try {
             songService.deleteSong(id);
@@ -88,7 +93,7 @@ public class SongController {
         }
     }
 
-    @PutMapping("/update/id/{id}")
+    @PutMapping("/auth/update/id/{id}")
     public ResponseEntity<?> updateArtist(
             @PathVariable int id,
             @RequestParam(value = "img", required = false) MultipartFile img,

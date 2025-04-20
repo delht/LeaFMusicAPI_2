@@ -64,6 +64,11 @@ public class SongService {
         return songMapper.toDTOs(songs);
     }
 
+    public List<SongDTO> findSongsByGenre(int genreId) {
+        List<Song> songs = songRepository.findByIdGenre(genreId);
+        return songMapper.toDTOs(songs);
+    }
+
 //    ===============================================================================================
 
     private final DeleteFile deleteFile;
