@@ -36,7 +36,7 @@ public class FavoritePlaylistService {
 
         // Nếu bài hát chưa có, thêm vào danh sách yêu thích
         FavoritePlaylist favorite = new FavoritePlaylist();
-        favorite.setName("Temp");
+        favorite.setName("Bai hat yeu thich cua " + idUser);
         favorite.setIdUser(idUser);
         favorite.setIdSong(idSong);
 
