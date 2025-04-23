@@ -13,4 +13,5 @@ import java.time.LocalDateTime;
 public class Album2DTO {
     private int idAlbum;
     private String name;
+    private int idArtist;
 }

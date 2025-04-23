@@ -11,5 +11,6 @@ public class LoginResponse {
     private String userId;
     private String email;
     private String role;
-
+    private Long idArtist;
+    private int upload;
 }

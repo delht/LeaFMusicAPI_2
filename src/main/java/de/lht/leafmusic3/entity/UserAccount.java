@@ -35,6 +35,12 @@ public class UserAccount {
     @CreationTimestamp
     private Timestamp createdAt;
 
+    @Column(name = "id_artist")
+    private Long idArtist;
+
+    @Column(name = "upload")
+    private int upload;
+
     @PrePersist
     public void generateId() {
         if (idUser == null || idUser.isEmpty()) {
@@ -42,6 +48,9 @@ public class UserAccount {
         }
         if (role == null) {
             this.role = Role.USER;
+        }
+        if (upload == 0) {
+            this.upload = 0;
         }
     }
 

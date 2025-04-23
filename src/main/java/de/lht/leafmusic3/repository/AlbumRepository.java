@@ -18,7 +18,7 @@ public interface AlbumRepository extends JpaRepository<Album, Integer> {
     List<Album> findByNameContainingIgnoreCase(String name);
 
 
-    @Query(value = "SELECT a.id_album, a.name FROM albums a", nativeQuery = true)
+    @Query(value = "SELECT a.id_album, a.name, a.id_artist FROM albums a", nativeQuery = true)
     List<Album2DTO> findAllAlbum();
 
     List<Album> findByUploadBy (String idUser);
