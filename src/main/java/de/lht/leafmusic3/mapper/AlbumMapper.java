@@ -17,6 +17,7 @@ public interface AlbumMapper {
     @Mapping(source = "imageUrl", target = "imageUrl")
     @Mapping(source = "releaseDate", target = "releaseDate")
     @Mapping(source = "idArtist", target = "idArtist")
+    @Mapping(source = "uploadBy", target = "uploadBy")
     AlbumDTO toDTO(Album album);
 
     List<AlbumDTO> toDTOs(List<Album> albums);

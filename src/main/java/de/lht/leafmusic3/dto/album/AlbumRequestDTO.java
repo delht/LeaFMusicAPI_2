@@ -12,4 +12,5 @@ public class AlbumRequestDTO {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime releaseDate;
     private int idArtist;
+    private String uploadBy;
 }

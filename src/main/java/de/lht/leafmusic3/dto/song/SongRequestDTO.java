@@ -17,5 +17,6 @@ public class SongRequestDTO {
     private int idArtist;
     private int idAlbum;
     private int idGenre;
+    private String uploadBy;
 
 }

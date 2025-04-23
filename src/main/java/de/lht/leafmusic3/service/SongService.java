@@ -28,9 +28,10 @@ import java.util.Random;
 @RequiredArgsConstructor //bo autowired
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SongService {
+
+
     private final SongRepository songRepository;
     private final SongMapper songMapper;
-//    private final Random random = new Random();
     private final ArtistRepository artistRepository;
 
     public List<SongDTO> getAllSongs() {
@@ -91,6 +92,7 @@ public class SongService {
             song.setIdArtist(songRequestDTO.getIdArtist());
             song.setIdAlbum(songRequestDTO.getIdAlbum());
             song.setIdGenre(songRequestDTO.getIdGenre());
+            song.setUploadBy(songRequestDTO.getUploadBy());
 
             song.setImageUrl(fileUrlImg);
             song.setFileUrl(fileUrlAudio);
@@ -139,6 +141,7 @@ public class SongService {
         song.setIdArtist(songRequestDTO.getIdArtist());
         song.setIdAlbum(songRequestDTO.getIdAlbum());
         song.setIdGenre(songRequestDTO.getIdGenre());
+        song.setUploadBy(song.getUploadBy());
 
         // Xử lý ảnh mới
         if (img != null && !img.isEmpty()) {
@@ -166,6 +169,15 @@ public class SongService {
 
         return songRepository.save(song);
     }
+
+//    ===============================================================================================
+
+    public List<SongDTO> getSongbyUser(String idUser){
+        List<Song> songs = songRepository.findByUploadBy(idUser);
+        return songMapper.toDTOs(songs);
+    }
+
+
 
 
 

@@ -120,6 +120,16 @@ public class SongController {
     }
 
 
+//    ===========================================================================================
+
+
+    @GetMapping("/upload/{id}")
+    public ResponseEntity<List<SongDTO>> getSongsByUploadBy(@PathVariable String id) {
+        return ResponseEntity.ok(songService.getSongbyUser(id));
+    }
+
+
+
 
 
 

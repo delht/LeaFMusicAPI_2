@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.lht.leafmusic3.dto.album.Album2DTO;
 import de.lht.leafmusic3.dto.album.AlbumDTO;
 import de.lht.leafmusic3.dto.album.AlbumRequestDTO;
+import de.lht.leafmusic3.dto.song.SongDTO;
 import de.lht.leafmusic3.entity.Album;
 import de.lht.leafmusic3.service.AlbumService;
 import lombok.RequiredArgsConstructor;
@@ -117,8 +118,14 @@ public class AlbumController {
                     .body("Không tìm thấy album: " + e.getMessage());
         }
     }
-    
 
+//    ===========================================================================================
+
+
+    @GetMapping("/upload/{id}")
+    public ResponseEntity<List<AlbumDTO>> getAlbumsByUploadBy(@PathVariable String id) {
+        return ResponseEntity.ok(albumService.getAlbumbyUser(id));
+    }
 
 
 }

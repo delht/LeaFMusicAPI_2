@@ -32,4 +32,8 @@ public class Album {
 
     @Column(name = "id_artist")
     private int idArtist;
+
+    @Column(name = "upload_by")
+    private String uploadBy;
+
 }

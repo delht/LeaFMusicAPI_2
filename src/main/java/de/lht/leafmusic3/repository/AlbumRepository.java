@@ -1,6 +1,7 @@
 package de.lht.leafmusic3.repository;
 
 import de.lht.leafmusic3.dto.album.Album2DTO;
+import de.lht.leafmusic3.dto.album.AlbumDTO;
 import de.lht.leafmusic3.entity.Album;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +20,7 @@ public interface AlbumRepository extends JpaRepository<Album, Integer> {
 
     @Query(value = "SELECT a.id_album, a.name FROM albums a", nativeQuery = true)
     List<Album2DTO> findAllAlbum();
+
+    List<Album> findByUploadBy (String idUser);
+
 }

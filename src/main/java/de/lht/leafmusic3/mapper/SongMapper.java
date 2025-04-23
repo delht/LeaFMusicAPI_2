@@ -13,6 +13,7 @@ public interface SongMapper {
 //    SongMapper INSTANCE = Mappers.getMapper(SongMapper.class);
 
     @Mapping(source = "idSong", target = "idSong")
+    @Mapping(source = "uploadBy", target = "uploadBy")
     SongDTO toDTO(Song song);
 
     List<SongDTO> toDTOs(List<Song> songs);

@@ -7,8 +7,10 @@ import de.lht.leafmusic3.dto.album.Album2DTO;
 import de.lht.leafmusic3.dto.album.AlbumDTO;
 import de.lht.leafmusic3.dto.album.AlbumRequestDTO;
 import de.lht.leafmusic3.dto.request.Album_Request;
+import de.lht.leafmusic3.dto.song.SongDTO;
 import de.lht.leafmusic3.entity.Album;
 import de.lht.leafmusic3.entity.Artist;
+import de.lht.leafmusic3.entity.Song;
 import de.lht.leafmusic3.mapper.AlbumMapper;
 import de.lht.leafmusic3.repository.AlbumRepository;
 import de.lht.leafmusic3.repository.ArtistRepository;
@@ -86,6 +88,7 @@ public class AlbumService {
             album.setReleaseDate(albumRequestDTO.getReleaseDate());
             album.setIdArtist(albumRequestDTO.getIdArtist());
             album.setImageUrl(fileUrlImg);  // Gán lại URL ảnh đã upload
+            album.setUploadBy(albumRequestDTO.getUploadBy());
 
             System.out.println("Lưu album: " + album.getName() + ", Image URL: " + fileUrlImg);
 
@@ -120,6 +123,7 @@ public class AlbumService {
         album.setName(albumRequestDTO.getName());
         album.setReleaseDate(albumRequestDTO.getReleaseDate());
         album.setIdArtist(albumRequestDTO.getIdArtist());
+        album.setUploadBy(album.getUploadBy());
 
         // Nếu có ảnh mới thì xử lý upload và xoá ảnh cũ
         if (img != null && !img.isEmpty()) {
@@ -145,7 +149,12 @@ public class AlbumService {
     }
 
 
+//    ===============================================================================================
 
+        public List<AlbumDTO> getAlbumbyUser(String idUser){
+            List<Album> albums = albumRepository.findByUploadBy(idUser);
+            return albumMapper.toDTOs(albums);
+        }
 
 
 

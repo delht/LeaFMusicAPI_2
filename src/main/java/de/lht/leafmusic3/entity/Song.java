@@ -44,4 +44,7 @@ public class Song {
     @Column(name = "id_genre")
     private int idGenre;
 
+    @Column(name = "upload_by")
+    private String uploadBy;
+
 }

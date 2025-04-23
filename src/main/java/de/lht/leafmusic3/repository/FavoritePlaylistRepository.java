@@ -14,7 +14,7 @@ public interface FavoritePlaylistRepository extends JpaRepository<FavoritePlayli
 
     Optional<FavoritePlaylist> findByIdUserAndIdSong(String idUser, int idSong);
 
-    @Query("SELECT new de.lht.leafmusic3.dto.song.SongDTO(s.idSong, s.name, s.play, s.imageUrl, s.fileUrl, s.releaseDate, s.idArtist, s.idAlbum, s.idGenre) " +
+    @Query("SELECT new de.lht.leafmusic3.dto.song.SongDTO(s.idSong, s.name, s.play, s.imageUrl, s.fileUrl, s.releaseDate, s.idArtist, s.idAlbum, s.idGenre, s.uploadBy) " +
             "FROM FavoritePlaylist f " +
             "JOIN Song s ON s.idSong = f.idSong " +
             "WHERE f.idUser = :idUser")
