@@ -49,7 +49,7 @@ public class UploadRequestService {
         return requestRepository.save(req);
     }
 
-    public UploadRequest approveRequest(Long id) {
+    public UploadRequest approveRequest(Long id ,int idArtist) {
         UploadRequest req = requestRepository.findById(id).orElseThrow();
         req.setStatus(RequestStatus.APPROVED);
         req.setReviewedAt(LocalDateTime.now());
@@ -57,6 +57,7 @@ public class UploadRequestService {
         // Update user
         UserAccount user = userRepository.findByEmail(req.getEmail()).orElseThrow();
         user.setUpload(1);
+        user.setIdArtist((long) idArtist);
         userRepository.save(user);
 
         return requestRepository.save(req);
@@ -77,6 +78,7 @@ public class UploadRequestService {
             UserAccount user = userRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy user theo email"));
             user.setUpload(0);
+            user.setIdArtist(null);
             userRepository.save(user);
         }
 

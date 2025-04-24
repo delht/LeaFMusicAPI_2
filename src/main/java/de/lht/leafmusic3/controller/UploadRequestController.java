@@ -41,9 +41,9 @@ public class UploadRequestController {
         return ResponseEntity.ok(req);
     }
 
-    @PostMapping("/approve/{id}")
-    public ResponseEntity<?> approve(@PathVariable Long id) {
-        return ResponseEntity.ok(requestService.approveRequest(id));
+    @PostMapping("/approve/{id}/{idArtist}")
+    public ResponseEntity<?> approve(@PathVariable Long id, @PathVariable int idArtist) {
+        return ResponseEntity.ok(requestService.approveRequest(id, idArtist));
     }
 
     @PostMapping("/reject/{id}")
