@@ -1,5 +1,8 @@
 package de.lht.leafmusic3.service;
 
+import de.lht.leafmusic3.cloud.GetPubID;
+import de.lht.leafmusic3.cloud.repo.UploadFile;
+import de.lht.leafmusic3.entity.Album;
 import de.lht.leafmusic3.entity.RequestStatus;
 import de.lht.leafmusic3.entity.UploadRequest;
 import de.lht.leafmusic3.entity.UserAccount;
@@ -10,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,12 +47,32 @@ public class UploadRequestService {
 
 //    ===========================================================================================
 
-    public UploadRequest createRequest(String email, String message) {
-        UploadRequest req = new UploadRequest();
-        req.setEmail(email);
-        req.setMessage(message);
-        return requestRepository.save(req);
+    private final UploadFile uploadFile;
+    private final GetPubID getPubID;
+
+    public UploadRequest createRequest(String email, String message, MultipartFile img) throws IOException {
+        try {
+            String fileUrlImg = null;
+
+            if (img != null && !img.isEmpty()) {
+                String folderImg = "LeaFMusic2/Images/Request/";
+                fileUrlImg = uploadFile.uploadFile(img, folderImg);
+            }
+
+            UploadRequest req = new UploadRequest();
+            req.setEmail(email);
+            req.setMessage(message);
+            req.setFileUrl(fileUrlImg);
+
+            System.out.println("Lưu request: " + req.getEmail() + ", Image URL: " + fileUrlImg);
+
+            return requestRepository.save(req);
+        } catch (IOException e) {
+            throw new IOException("Lỗi khi xử lý ảnh", e);
+        }
     }
+
+
 
     public UploadRequest approveRequest(Long id ,int idArtist) {
         UploadRequest req = requestRepository.findById(id).orElseThrow();

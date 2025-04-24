@@ -29,5 +29,8 @@ public class UploadRequest {
 
     private LocalDateTime reviewedAt;
 
+    @Column(name = "file_url")
+    private String fileUrl;
+
 
 }
