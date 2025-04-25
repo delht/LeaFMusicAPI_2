@@ -3,6 +3,7 @@ package de.lht.leafmusic3.controller;
 import de.lht.leafmusic3.dto.genre.GenreDTO;
 import de.lht.leafmusic3.service.GenreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,6 +21,11 @@ public class GenreControler {
         return genres;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<GenreDTO> getGenreById(@PathVariable int id) {
+        GenreDTO genre = genreService.getGenreById(id);
+        return ResponseEntity.ok(genre);
+    }
 
 //    =============================================================================================
 

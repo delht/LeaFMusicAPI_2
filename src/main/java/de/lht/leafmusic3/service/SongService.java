@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -177,11 +178,14 @@ public class SongService {
         return songMapper.toDTOs(songs);
     }
 
-
-
-
-
 //    ===============================================================================================
+
+    public List<Song> getSuggestedSongs(List<Integer> artistIds, List<Integer> genreIds, int limit) {
+        List<Song> matchedSongs = songRepository.findByIdArtistInOrIdGenreIn(artistIds, genreIds);
+        Collections.shuffle(matchedSongs); // Trộn để tạo ds ngẫu nhiên
+        return matchedSongs.stream().limit(limit).collect(Collectors.toList());
+    }
+
 
 
 

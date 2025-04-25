@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.lht.leafmusic3.dto.album.AlbumRequestDTO;
 import de.lht.leafmusic3.dto.song.SongDTO;
 import de.lht.leafmusic3.dto.song.SongRequestDTO;
+import de.lht.leafmusic3.dto.song.SuggestionRequest;
 import de.lht.leafmusic3.entity.Album;
 import de.lht.leafmusic3.entity.Song;
 import de.lht.leafmusic3.service.SongService;
@@ -129,7 +130,12 @@ public class SongController {
     }
 
 
+//    ===========================================================================================
 
+    @PostMapping("/suggest")
+    public List<Song> suggestSongs(@RequestBody SuggestionRequest request) {
+        return songService.getSuggestedSongs(request.getArtistIds(), request.getGenreIds(), 5);
+    }
 
 
 

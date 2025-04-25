@@ -21,6 +21,13 @@ public class GenreService {
         return genreMapper.toDTOs(genres);
     }
 
+    public GenreDTO getGenreById(int id) {
+        String genreId = String.valueOf(id);
+        Genre genre = genreRepository.findById(genreId)
+                .orElseThrow(() -> new RuntimeException("Genre not found"));
+        return genreMapper.toDTO(genre);
+    }
+
     // ============================================================================================
 
     public GenreDTO addGenre(GenreDTO genreDTO) {
