@@ -13,6 +13,7 @@ public interface CustomListMapper {
     CustomListMapper INSTANCE = Mappers.getMapper(CustomListMapper.class);
 
     @Mapping(source = "idList", target = "idList")
+    @Mapping(source = "state", target = "state")
     CustomListDTO toDto(CustomList customList);
 
     List<CustomListDTO> toDtos(List<CustomList> customList);

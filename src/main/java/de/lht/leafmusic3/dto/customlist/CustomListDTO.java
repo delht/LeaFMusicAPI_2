@@ -11,4 +11,5 @@ public class CustomListDTO {
     private int idList;
     private String name;
     private String idUser;
+    private int state;
 }

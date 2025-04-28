@@ -1,9 +1,6 @@
 package de.lht.leafmusic3.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class CustomList {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_list")
     private int idList;
 
@@ -25,4 +23,6 @@ public class CustomList {
     @Column(name = "id_user")
     private String idUser;
 
+    @Column(name = "state")
+    private int state;
 }

@@ -21,6 +21,13 @@ public class CustomListController {
         return customLists;
     }
 
+    @GetMapping("/public")
+    public List<CustomListDTO> getCustomListsByState() {
+        int state = 1;
+        List<CustomListDTO> customLists = customListService.getByState(state);
+        return customLists;
+    }
+
 
     @GetMapping("/user/{id}")
     public List<CustomListDTO> getCustomListById(@PathVariable String id) {
@@ -54,6 +61,31 @@ public class CustomListController {
             @PathVariable int idList) {
         customListService.deleteCustomList(idList);
         return ResponseEntity.noContent().build();
+    }
+
+/// ================================================================================
+
+    @PutMapping("/public/{idList}")
+    public ResponseEntity<Void> setPublicCustomList(
+            @PathVariable int idList) {
+        customListService.setPublicCustomList(idList);
+        return ResponseEntity.ok().build();
+    }
+
+//    @PostMapping("/clone")
+//    public ResponseEntity<Void> cloneCustomList(
+//            @RequestParam int idList,
+//            @RequestParam String idUser) {
+//        customListService.clonePlaylist(idList, idUser);
+//        return ResponseEntity.ok().build();
+//    }
+
+    @PostMapping("/clone")
+    public ResponseEntity<Void> cloneCustomList(
+            @RequestParam int idList,
+            @RequestParam String idUser) {
+        customListService.clonePlaylist(idList, idUser);
+        return ResponseEntity.ok().build();
     }
 
 
