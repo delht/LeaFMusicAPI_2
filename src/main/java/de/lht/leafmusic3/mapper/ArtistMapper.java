@@ -12,7 +12,7 @@ import java.util.List;
 public interface ArtistMapper {
     ArtistMapper INSTANCE = Mappers.getMapper(ArtistMapper.class);
 
-    @Mapping(source = "idArtist", target = "idArtist")
+//    @Mapping(source = "idArtist", target = "idArtist")
     ArtistDTO toDTO(Artist artist);
 
     List<ArtistDTO> toDTOs(List<Artist> artists);

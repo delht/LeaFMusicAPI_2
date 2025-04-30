@@ -12,7 +12,7 @@ import java.util.List;
 public interface CustomSonglistMapper {
     CustomSonglistMapper INSTANCE = Mappers.getMapper(CustomSonglistMapper.class);
 
-    @Mapping(source = "idItem", target = "idItem")
+//    @Mapping(source = "idItem", target = "idItem")
     CustomSonglistDTO toDto(CustomSonglist customSonglist);
 
     List<CustomSonglistDTO> toDtos(List<CustomSonglist> customSonglists);
