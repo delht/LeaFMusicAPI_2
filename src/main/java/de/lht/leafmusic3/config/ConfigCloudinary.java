@@ -10,10 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@PropertySource("classpath:env.properties")  // <-- Thêm dòng này
+//@PropertySource("classpath:env.properties")
 public class ConfigCloudinary {
 
-    @Value("${cloudinary.cloud_name}")  // Khớp với tên trong file properties
+    @Value("${cloudinary.cloud_name}")
     private String cloudName;
 
     @Value("${cloudinary.api_key}")

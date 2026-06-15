@@ -77,38 +77,40 @@ public class CustomListService {
         customListRepository.save(customList);
     }
 
-//    public void clonePlaylist(int originalListId, String newUserId) {
-//        customListRepository.clonePlaylist(originalListId, newUserId);
-//    }
-
-    @Transactional
+    //Dung store trong dtb
     public void clonePlaylist(int originalListId, String newUserId) {
-
-        ///Laay ds goc
-        CustomList originalList = customListRepository.findById(String.valueOf(originalListId))
-                .orElseThrow(() -> new RuntimeException("DS ko ton tai"));
-
-        ///Tao ds moi
-        CustomList newList = new CustomList();
-        newList.setName(originalList.getName() + " (Copy)");
-        newList.setIdUser(newUserId);
-        newList.setState(0);
-
-        CustomList savedList = customListRepository.save(newList);
-
-        /// Copy nhac
-        List<CustomSonglist> originalSongs = customSonglistRepository.findByIdList(originalListId);
-
-        List<CustomSonglist> newSongs = new ArrayList<>();
-        for (CustomSonglist song : originalSongs) {
-            CustomSonglist newSong = new CustomSonglist();
-            newSong.setIdList(savedList.getIdList());
-            newSong.setIdSong(song.getIdSong());
-            newSongs.add(newSong);
-        }
-
-        customSonglistRepository.saveAll(newSongs);
+        customListRepository.clonePlaylist(originalListId, newUserId);
     }
+
+    //Khong dung store trong dtb
+//    @Transactional
+//    public void clonePlaylist(int originalListId, String newUserId) {
+//
+//        ///Laay ds goc
+//        CustomList originalList = customListRepository.findById(String.valueOf(originalListId))
+//                .orElseThrow(() -> new RuntimeException("DS ko ton tai"));
+//
+//        ///Tao ds moi
+//        CustomList newList = new CustomList();
+//        newList.setName(originalList.getName() + " (Copy)");
+//        newList.setIdUser(newUserId);
+//        newList.setState(0);
+//
+//        CustomList savedList = customListRepository.save(newList);
+//
+//        /// Copy nhac
+//        List<CustomSonglist> originalSongs = customSonglistRepository.findByIdList(originalListId);
+//
+//        List<CustomSonglist> newSongs = new ArrayList<>();
+//        for (CustomSonglist song : originalSongs) {
+//            CustomSonglist newSong = new CustomSonglist();
+//            newSong.setIdList(savedList.getIdList());
+//            newSong.setIdSong(song.getIdSong());
+//            newSongs.add(newSong);
+//        }
+//
+//        customSonglistRepository.saveAll(newSongs);
+//    }
 
 
 

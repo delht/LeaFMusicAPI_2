@@ -13,8 +13,8 @@ public interface CustomListRepository extends JpaRepository<CustomList, String> 
 
     List<CustomList> findByState(int state);
 
-
-//    @Procedure(procedureName = "clone_playlist")
-//    void clonePlaylist(@Param("original_list_id") int originalListId, @Param("new_user_id") String newUserId);
+    //Dung store trong dtb de clone
+    @Procedure(procedureName = "clone_playlist")
+    void clonePlaylist(@Param("original_list_id") int originalListId, @Param("new_user_id") String newUserId);
 
 }
