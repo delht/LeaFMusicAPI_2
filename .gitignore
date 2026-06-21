@@ -31,5 +31,16 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Environment & Configuration Files ###
 src/main/resources/env.properties
 src/main/resources/application.properties
+.env
+.env.local
+.env.*.local
+
+### Sensitive Data ###
+credentials.txt
+secrets.txt
+
+### git update-index --no-assume-unchanged src/main/resources/application.properties
