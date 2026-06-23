@@ -1,58 +1,41 @@
 package de.lht.leafmusic3.entity;
 
-
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "user_accounts")
 @Data
-@NoArgsConstructor @AllArgsConstructor
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserAccount {
 
     @Id
-    @Column(name = "id_user", updatable = false, nullable = false)
+    @UuidGenerator
+    @Column(name = "id_user")
     private String idUser;
 
-    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password", nullable = false)
-    private String password; // Lưu BCrypt hash
+    private String password;
 
-    @Column(name = "email", unique = true)
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
     private Role role;
 
-    @CreationTimestamp
-    private Timestamp createdAt;
+    @Column(name = "upload_quota")
+    private Integer uploadQuota;
 
-    @Column(name = "id_artist")
-    private Long idArtist;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    @Column(name = "upload")
-    private int upload;
-
-    @PrePersist
-    public void generateId() {
-        if (idUser == null || idUser.isEmpty()) {
-            this.idUser = UUID.randomUUID().toString();
-        }
-        if (role == null) {
-            this.role = Role.USER;
-        }
-        if (upload == 0) {
-            this.upload = 0;
-        }
-    }
-
-
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }
