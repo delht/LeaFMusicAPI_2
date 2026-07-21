@@ -1,10 +1,12 @@
 package de.lht.leafmusic3.controller;
 
+import de.lht.leafmusic3.common.ApiResponse;
 import de.lht.leafmusic3.dto.useraccount.UserAccountRequest;
 import de.lht.leafmusic3.dto.useraccount.UserAccountRespone;
 import de.lht.leafmusic3.entity.UserAccount;
 import de.lht.leafmusic3.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,10 +45,19 @@ public class UserAccountController {
         return userAccountService.updateUser(id, request);
     }
 
+//    @DeleteMapping("/delete/{id}")
+//    public String deleteUser(@PathVariable String id) {
+//        userAccountService.DeleteUser(id);
+//        return "Xóa thành công";
+//    }
+
     @DeleteMapping("/delete/{id}")
-    public String deleteUser(@PathVariable String id) {
+    public ResponseEntity<?> deleteUser(@PathVariable String id) {
+
         userAccountService.DeleteUser(id);
-        return "Xóa thành công";
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "Xóa thành công", null)
+        );
     }
 
 }
