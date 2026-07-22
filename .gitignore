@@ -34,7 +34,7 @@ build/
 
 ### Environment & Configuration Files ###
 src/main/resources/env.properties
-src/main/resources/application.properties
+src/main/resources/application.yaml
 .env
 .env.local
 .env.*.local

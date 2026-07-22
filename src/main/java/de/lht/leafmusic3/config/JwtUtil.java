@@ -10,11 +10,11 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // Inject giá trị từ application.properties vào biến SECRET
+    // Inject giá trị từ application.yaml vào biến SECRET
     // @Value("${jwt.secret}")
     private String SECRET = "7a2f61c3a2e89e7a6c3b2c3f52d3e5d1bbf86dbd59715ab3e12e572fb18f3c35";
 
-    // Thời gian hết hạn của token (có thể cấu hình trong application.properties)
+    // Thời gian hết hạn của token (có thể cấu hình trong application.yaml)
     // @Value("${jwt.expiration}")
     private long EXPIRATION = 86400; // 24 giờ = 86400 giây
 

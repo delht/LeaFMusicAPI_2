@@ -4,6 +4,7 @@ package de.lht.leafmusic3.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -11,21 +12,23 @@ import java.util.UUID;
 @Entity
 @Table(name = "user_accounts")
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class UserAccount {
 
     @Id
-    @Column(name = "id_user", updatable = false, nullable = false)
+    @UuidGenerator
+    @Column(name = "id_user")
     private String idUser;
 
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "password", nullable = false)
-    private String password; // Lưu BCrypt hash
+    @Column(name = "password")
+    private String password;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email")
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -40,19 +43,6 @@ public class UserAccount {
 
     @Column(name = "upload")
     private int upload;
-
-    @PrePersist
-    public void generateId() {
-        if (idUser == null || idUser.isEmpty()) {
-            this.idUser = UUID.randomUUID().toString();
-        }
-        if (role == null) {
-            this.role = Role.USER;
-        }
-        if (upload == 0) {
-            this.upload = 0;
-        }
-    }
 
 
 }
