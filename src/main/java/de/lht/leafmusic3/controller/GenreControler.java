@@ -1,5 +1,6 @@
 package de.lht.leafmusic3.controller;
 
+import de.lht.leafmusic3.dto.ApiResponse;
 import de.lht.leafmusic3.dto.genre.GenreDTO;
 import de.lht.leafmusic3.service.GenreService;
 import lombok.RequiredArgsConstructor;
@@ -16,32 +17,65 @@ public class GenreControler {
     private final GenreService genreService;
 
     @GetMapping("/all")
-    public List<GenreDTO> getGenres() {
+    public ResponseEntity<ApiResponse<List<GenreDTO>>> getGenres() {
         List<GenreDTO> genres = genreService.getAllGenres();
-        return genres;
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        org.springframework.http.HttpStatus.OK,
+                        "Lấy danh sách thể loại thành công",
+                        genres
+                )
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GenreDTO> getGenreById(@PathVariable int id) {
+    public ResponseEntity<ApiResponse<GenreDTO>> getGenreById(@PathVariable int id) {
         GenreDTO genre = genreService.getGenreById(id);
-        return ResponseEntity.ok(genre);
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        org.springframework.http.HttpStatus.OK,
+                        "Lấy thể loại thành công",
+                        genre
+                )
+        );
     }
 
 //    =============================================================================================
 
     @PostMapping("/auth/add")
-    public GenreDTO addGenre(@RequestBody GenreDTO genreDTO) {
-        return genreService.addGenre(genreDTO);
+    public ResponseEntity<ApiResponse<GenreDTO>> addGenre(@RequestBody GenreDTO genreDTO) {
+        GenreDTO genre = genreService.addGenre(genreDTO);
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        org.springframework.http.HttpStatus.OK,
+                        "Thêm thể loại thành công",
+                        genre
+                )
+        );
     }
 
     @DeleteMapping("/auth/delete/{id}")
-    public void deleteGenre(@PathVariable int id) {
+    public ResponseEntity<ApiResponse<Void>> deleteGenre(@PathVariable int id) {
         genreService.deleteGenre(id);
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        org.springframework.http.HttpStatus.OK,
+                        "Xóa thể loại thành công",
+                        null
+                )
+        );
     }
 
     @PutMapping("/auth/update/{id}")
-    public GenreDTO updateGenre(@PathVariable int id, @RequestBody GenreDTO genreDTO) {
-        return genreService.updateGenre(id, genreDTO);
+    public ResponseEntity<ApiResponse<GenreDTO>> updateGenre(@PathVariable int id, @RequestBody GenreDTO genreDTO) {
+        GenreDTO updatedGenre = genreService.updateGenre(id, genreDTO);
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        org.springframework.http.HttpStatus.OK,
+                        "Cập nhật thể loại thành công",
+                        updatedGenre
+                )
+        );
     }
 
 }

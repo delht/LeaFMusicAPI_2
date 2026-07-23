@@ -11,7 +11,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-
     UserDTO toDTO(UserAccount user);
     List<UserDTO> toDTOs(List<UserAccount> users);
 }
