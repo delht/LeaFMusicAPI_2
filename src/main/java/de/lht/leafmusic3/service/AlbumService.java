@@ -1,19 +1,11 @@
 package de.lht.leafmusic3.service;
 
-import de.lht.leafmusic3.cloud.GetPubID;
-import de.lht.leafmusic3.cloud.repo.DeleteFile;
-import de.lht.leafmusic3.cloud.repo.UploadFile;
 import de.lht.leafmusic3.dto.album.Album2DTO;
 import de.lht.leafmusic3.dto.album.AlbumDTO;
 import de.lht.leafmusic3.dto.album.AlbumRequestDTO;
-import de.lht.leafmusic3.dto.request.Album_Request;
-import de.lht.leafmusic3.dto.song.SongDTO;
 import de.lht.leafmusic3.entity.Album;
-import de.lht.leafmusic3.entity.Artist;
-import de.lht.leafmusic3.entity.Song;
 import de.lht.leafmusic3.mapper.AlbumMapper;
 import de.lht.leafmusic3.repository.AlbumRepository;
-import de.lht.leafmusic3.repository.ArtistRepository;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,21 +14,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import de.lht.leafmusic3.storage.constant.StorageFolder;
+import de.lht.leafmusic3.storage.service.StorageService;
+
 import java.io.IOException;
 import java.util.List;
 
-    @Slf4j
-    @Service
-    @RequiredArgsConstructor //bo autowired
-    @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
+@Service
+@RequiredArgsConstructor //bo autowired
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AlbumService {
     private final AlbumRepository albumRepository;
     private final AlbumMapper albumMapper;
 
-//    public AlbumService(AlbumRepository albumRepository, AlbumMapper albumMapper) {
-//        this.albumRepository = albumRepository;
-//        this.albumMapper = albumMapper;
-//    }
 
     public List<AlbumDTO> getAllAlbums() {
         List<Album> albums = albumRepository.findAll();
@@ -69,9 +60,7 @@ public class AlbumService {
 
 //    =================================================================================
 
-    private final DeleteFile deleteFile;
-    private final UploadFile uploadFile;
-    private final GetPubID getPubID;
+    private final StorageService storageService;
 
 
     @Transactional
@@ -79,8 +68,10 @@ public class AlbumService {
         try {
 
             // Upload ảnh
-            String folderImg = "LeaFMusic2/Images/Album/";
-            String fileUrlImg = uploadFile.uploadFile(img, folderImg);
+            String fileUrlImg = storageService.upload(
+                    img,
+                    StorageFolder.ALBUM
+            );
 
             // Tạo đối tượng Album
             Album album = new Album();
@@ -102,14 +93,12 @@ public class AlbumService {
         Album album = albumRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Khong tim thay album co id: "+id));
 
-        String folderImg = "LeaFMusic2/Images/Album/";
-        String fileUrlImg = album.getImageUrl();
-        String publicIdImg = getPubID.layPublicIdTuURL(fileUrlImg, folderImg);
+        log.info("Url file cần xóa: {}", album.getImageUrl());
 
-        log.info("Url file cần xóa {}", fileUrlImg);
-        deleteFile.deleteFile(publicIdImg);
+        storageService.delete(album.getImageUrl());
 
         albumRepository.delete(album);
+
         log.info("Album với ID {} đã được xóa thành công.", id);
     }
 
@@ -127,19 +116,22 @@ public class AlbumService {
 
         // Nếu có ảnh mới thì xử lý upload và xoá ảnh cũ
         if (img != null && !img.isEmpty()) {
-            String folderImg = "LeaFMusic2/Images/Album/";
             String oldImageUrl = album.getImageUrl();
 
-            // Xóa ảnh cũ
             if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
-                String publicIdImg = getPubID.layPublicIdTuURL(oldImageUrl, folderImg);
-                deleteFile.deleteFile(publicIdImg);
-                log.info("Đã xóa ảnh cũ: {}", publicIdImg);
+
+                storageService.delete(oldImageUrl);
+
+                log.info("Đã xóa ảnh cũ.");
             }
 
-            // Upload ảnh mới
-            String newImageUrl = uploadFile.uploadFile(img, folderImg);
+            String newImageUrl = storageService.upload(
+                    img,
+                    StorageFolder.ALBUM
+            );
+
             album.setImageUrl(newImageUrl);
+
             log.info("Đã upload ảnh mới: {}", newImageUrl);
         } else {
             log.info("Không có ảnh mới, giữ nguyên ảnh cũ.");
