@@ -4,6 +4,7 @@ import de.lht.leafmusic3.dto.ApiResponse;
 import de.lht.leafmusic3.dto.genre.GenreDTO;
 import de.lht.leafmusic3.service.GenreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class GenreControler {
         List<GenreDTO> genres = genreService.getAllGenres();
         return ResponseEntity.ok(
                 new ApiResponse<>(
-                        org.springframework.http.HttpStatus.OK,
+                        HttpStatus.OK,
                         "Lấy danh sách thể loại thành công",
                         genres
                 )
@@ -33,7 +34,7 @@ public class GenreControler {
         GenreDTO genre = genreService.getGenreById(id);
         return ResponseEntity.ok(
                 new ApiResponse<>(
-                        org.springframework.http.HttpStatus.OK,
+                        HttpStatus.OK,
                         "Lấy thể loại thành công",
                         genre
                 )
@@ -47,7 +48,7 @@ public class GenreControler {
         GenreDTO genre = genreService.addGenre(genreDTO);
         return ResponseEntity.ok(
                 new ApiResponse<>(
-                        org.springframework.http.HttpStatus.OK,
+                        HttpStatus.OK,
                         "Thêm thể loại thành công",
                         genre
                 )
@@ -59,7 +60,7 @@ public class GenreControler {
         genreService.deleteGenre(id);
         return ResponseEntity.ok(
                 new ApiResponse<>(
-                        org.springframework.http.HttpStatus.OK,
+                        HttpStatus.OK,
                         "Xóa thể loại thành công",
                         null
                 )
@@ -71,7 +72,7 @@ public class GenreControler {
         GenreDTO updatedGenre = genreService.updateGenre(id, genreDTO);
         return ResponseEntity.ok(
                 new ApiResponse<>(
-                        org.springframework.http.HttpStatus.OK,
+                        HttpStatus.OK,
                         "Cập nhật thể loại thành công",
                         updatedGenre
                 )

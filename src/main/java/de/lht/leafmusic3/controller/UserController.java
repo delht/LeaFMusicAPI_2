@@ -38,7 +38,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserAccount user) {
-        UserAccount account = userService.registerUser(user.getEmail(), user.getPassword());
+        UserAccount account = userService.registerUser(user.getEmail(), user.getPassWord());
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         HttpStatus.OK,
@@ -50,7 +50,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserAccount user) {
-        LoginResponse response = userService.login(user.getEmail(), user.getPassword());
+        LoginResponse response = userService.login(user.getEmail(), user.getPassWord());
 
         return ResponseEntity.ok(
                 new ApiResponse<>(

@@ -46,29 +46,28 @@ public class UserService {
         String username = email.split("@")[0];
 
         UserAccount account = new UserAccount();
-        account.setUsername(username);
-        account.setPassword(hashedPassword);
+        account.setUserName(username);
+        account.setPassWord(hashedPassword);
         account.setEmail(email);
         account.setRole(Role.USER);
-
         return userRepository.save(account);
     }
 
     public LoginResponse login(String email, String password) {
         UserAccount user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(HttpStatus.UNAUTHORIZED, "Email hoặc mật khẩu không đúng"));
-        if (!encoder.matches(password, user.getPassword())) { throw new AppException(HttpStatus.UNAUTHORIZED, "Email hoặc mật khẩu không đúng"); }
-        String token = jwtUtil.generateToken(user.getUsername(),user.getIdUser(), user.getEmail());
-        return new LoginResponse(token, user.getUsername(), user.getIdUser(), user.getEmail(), String.valueOf(user.getRole()), user.getIdArtist(), user.getUpload());
+        if (!encoder.matches(password, user.getPassWord())) { throw new AppException(HttpStatus.UNAUTHORIZED, "Email hoặc mật khẩu không đúng"); }
+        String token = jwtUtil.generateToken(user.getUserName(),user.getIdUser(), user.getEmail());
+        return new LoginResponse(token, user.getUserName(), user.getIdUser(), user.getEmail(), String.valueOf(user.getRole()), user.getIdArtist(), user.getUpload());
     }
 
     public void changePassword(ChangePassword changePassword) {
         UserAccount user = userRepository.findById(changePassword.getId())
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Không tìm thấy người dùng"));
-        if (!encoder.matches(changePassword.getOldPassword(), user.getPassword())) {
+        if (!encoder.matches(changePassword.getOldPassword(), user.getPassWord())) {
             throw new AppException(HttpStatus.BAD_REQUEST, "Mật khẩu cũ không đúng");
         }
         String newEncoded = encoder.encode(changePassword.getNewPassword());
-        user.setPassword(newEncoded);
+        user.setPassWord(newEncoded);
         userRepository.save(user);
     }
 

@@ -23,10 +23,10 @@ public class UserAccount {
     private String idUser;
 
     @Column(name = "username")
-    private String username;
+    private String userName;
 
     @Column(name = "password")
-    private String password;
+    private String passWord;
 
     @Column(name = "email")
     private String email;

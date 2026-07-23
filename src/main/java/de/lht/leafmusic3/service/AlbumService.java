@@ -4,6 +4,7 @@ import de.lht.leafmusic3.dto.album.Album2DTO;
 import de.lht.leafmusic3.dto.album.AlbumDTO;
 import de.lht.leafmusic3.dto.album.AlbumRequestDTO;
 import de.lht.leafmusic3.entity.Album;
+import de.lht.leafmusic3.exception.AppException;
 import de.lht.leafmusic3.mapper.AlbumMapper;
 import de.lht.leafmusic3.repository.AlbumRepository;
 import jakarta.transaction.Transactional;
@@ -11,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor //bo autowired
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AlbumService {
     private final AlbumRepository albumRepository;
@@ -31,28 +33,29 @@ public class AlbumService {
 
     public List<AlbumDTO> getAllAlbums() {
         List<Album> albums = albumRepository.findAll();
-        System.out.println("Dữ liệu album" + albums);
         return albumMapper.toDTOs(albums);
     }
 
     public List<Album2DTO> getAllAlbums2() {
         List<Album2DTO> albums = albumRepository.findAllAlbum();
-        System.out.println("Dữ liệu album: " + albums);
         return albums;
     }
 
     public List<AlbumDTO> getAlbumsByArtist(int artistId) {
-        List<Album> albums = albumRepository.findByIdArtist(artistId);
+        List<Album> albums = albumRepository.findByIdArtist(artistId)
+                .orElseThrow(()->new AppException(HttpStatus.CONFLICT, "Không tìm thấy album của nghệ sĩ có id: "+artistId));
         return albumMapper.toDTOs(albums);
     }
 
+    //TODO sửa random
     public List<AlbumDTO> getRandomAlbums(int limit){
         List<Album> albums = albumRepository.findRandomAlbums(limit);
         return albumMapper.toDTOs(albums);
     }
 
     public AlbumDTO getAlbumById(int albumId) {
-        Album album = albumRepository.findById(albumId).orElse(null);
+        Album album = albumRepository.findById(albumId)
+                .orElseThrow(() -> new AppException(HttpStatus.CONFLICT, "Không tìm thấy album có id: " + albumId));;
         return albumMapper.toDTO(album);
     }
 
@@ -64,28 +67,26 @@ public class AlbumService {
 
 
     @Transactional
-    public Album addAlbum(MultipartFile img, AlbumRequestDTO albumRequestDTO) throws IOException {
+    public Album addAlbum(MultipartFile img, AlbumRequestDTO albumRequestDTO) {
+
         try {
 
-            // Upload ảnh
-            String fileUrlImg = storageService.upload(
-                    img,
-                    StorageFolder.ALBUM
-            );
+            String fileUrlImg = storageService.upload(img, StorageFolder.ALBUM);
 
-            // Tạo đối tượng Album
             Album album = new Album();
             album.setName(albumRequestDTO.getName());
             album.setReleaseDate(albumRequestDTO.getReleaseDate());
             album.setIdArtist(albumRequestDTO.getIdArtist());
-            album.setImageUrl(fileUrlImg);  // Gán lại URL ảnh đã upload
+            album.setImageUrl(fileUrlImg);
             album.setUploadBy(albumRequestDTO.getUploadBy());
 
-            System.out.println("Lưu album: " + album.getName() + ", Image URL: " + fileUrlImg);
-
             return albumRepository.save(album);
+
         } catch (IOException e) {
-            throw new IOException("Lỗi khi xử lý ảnh", e);
+            throw new AppException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Upload ảnh thất bại."
+            );
         }
     }
 

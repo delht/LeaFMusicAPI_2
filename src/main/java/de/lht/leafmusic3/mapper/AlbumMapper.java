@@ -10,16 +10,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AlbumMapper {
-    AlbumMapper INSTANCE = Mappers.getMapper(AlbumMapper.class); //chưa dùng
-
-//    @Mapping(source = "idAlbum", target = "idAlbum")
-//    @Mapping(source = "name", target = "name")
-//    @Mapping(source = "imageUrl", target = "imageUrl")
-//    @Mapping(source = "releaseDate", target = "releaseDate")
-//    @Mapping(source = "idArtist", target = "idArtist")
-//    @Mapping(source = "uploadBy", target = "uploadBy")
     AlbumDTO toDTO(Album album);
-
     List<AlbumDTO> toDTOs(List<Album> albums);
-
 }

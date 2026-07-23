@@ -8,9 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AlbumRepository extends JpaRepository<Album, Integer> {
-    List<Album> findByIdArtist(int artistId);
+    Optional<List<Album>> findByIdArtist(int artistId);
 
     @Query(value = "SELECT * FROM albums ORDER BY RAND() LIMIT :limit", nativeQuery = true)
     List<Album> findRandomAlbums(@Param("limit") int limit);
