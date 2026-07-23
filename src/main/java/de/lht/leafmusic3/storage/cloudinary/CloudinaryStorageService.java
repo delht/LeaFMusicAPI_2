@@ -58,9 +58,9 @@ public class CloudinaryStorageService implements StorageService {
     }
 
     @Override
-    public void delete(String fileUrl) throws IOException {
+    public void delete(String fileUrl, String folder) throws IOException {
 
-        String publicId = extractPublicId(fileUrl);
+        String publicId = extractPublicId(fileUrl, folder);
 
         log.info("Xóa file: {}", publicId);
 
@@ -82,9 +82,9 @@ public class CloudinaryStorageService implements StorageService {
      * Từ URL lấy ra publicId
      */
 
-    private String extractPublicId(String fileUrl) {
+    private String extractPublicId(String fileUrl, String folder) {
 
-        String folder = storageFolder.ALBUM;
+//        String folder = storageFolder.ALBUM;
 
         int start = fileUrl.indexOf(folder);
 

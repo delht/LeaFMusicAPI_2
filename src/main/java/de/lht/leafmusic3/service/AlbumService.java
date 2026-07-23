@@ -92,11 +92,11 @@ public class AlbumService {
 
     public void deleteAlbum(int id) throws IOException {
         Album album = albumRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Khong tim thay album co id: "+id));
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Khong tim thay album co id: "+id));
 
         log.info("Url file cần xóa: {}", album.getImageUrl());
 
-        storageService.delete(album.getImageUrl());
+        storageService.delete(album.getImageUrl(), StorageFolder.ALBUM);
 
         albumRepository.delete(album);
 
@@ -107,7 +107,7 @@ public class AlbumService {
     @Transactional
     public Album updateAlbum(int id, MultipartFile img, AlbumRequestDTO albumRequestDTO) throws IOException {
         Album album = albumRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy album với id: " + id));
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Không tìm thấy album với id: " + id));
 
         // Cập nhật thông tin text
         album.setName(albumRequestDTO.getName());
@@ -121,7 +121,7 @@ public class AlbumService {
 
             if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
 
-                storageService.delete(oldImageUrl);
+                storageService.delete(oldImageUrl, StorageFolder.ALBUM);
 
                 log.info("Đã xóa ảnh cũ.");
             }

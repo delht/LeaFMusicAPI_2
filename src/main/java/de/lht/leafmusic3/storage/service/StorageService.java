@@ -5,5 +5,5 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface StorageService {
     String upload (MultipartFile file, String folder) throws IOException;
-    void delete (String fileUrl) throws IOException;
+    void delete (String fileUrl, String folder) throws IOException;;
 }

@@ -10,11 +10,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ArtistMapper {
-    ArtistMapper INSTANCE = Mappers.getMapper(ArtistMapper.class);
-
-//    @Mapping(source = "idArtist", target = "idArtist")
     ArtistDTO toDTO(Artist artist);
-
     List<ArtistDTO> toDTOs(List<Artist> artists);
 
 }
