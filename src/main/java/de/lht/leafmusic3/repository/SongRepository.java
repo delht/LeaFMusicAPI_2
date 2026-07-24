@@ -10,20 +10,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SongRepository extends JpaRepository<Song, Integer> {
 
     @Query(value = "SELECT * FROM songs ORDER BY RAND() LIMIT :limit", nativeQuery = true)
-    List<Song> findRandomSongs(@Param("limit") int limit);
+    Optional<List<Song>> findRandomSongs(@Param("limit") int limit);
 
-    List<Song> findByIdArtist(int artistId);
-    List<Song> findByIdAlbum(int albumId);
+    Optional<List<Song>> findByIdArtist(int artistId);
+    Optional<List<Song>> findByIdAlbum(int albumId);
 
-    Song findById(int id);
+    Optional<Song> findById(int id);;
 
     List<Song> findByNameContainingIgnoreCase(String name);
 
-    List<Song> findByIdGenre(int genreId);
+    Optional<List<Song>> findByIdGenre(int genreId);
 
     List<Song> findByUploadBy(String idUser);
 

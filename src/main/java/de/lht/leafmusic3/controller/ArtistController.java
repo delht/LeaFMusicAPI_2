@@ -29,7 +29,6 @@ import java.util.List;
 @RequestMapping("/artists")
 public class ArtistController {
     private final ArtistService artistService;
-//    private final SongService songService;
 
     @GetMapping("/all")
     public List<ArtistDTO> getArtists() {

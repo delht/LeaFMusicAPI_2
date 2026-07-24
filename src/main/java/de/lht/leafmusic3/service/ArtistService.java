@@ -82,7 +82,7 @@ public class ArtistService {
 
     public void deleteArtist(String id) throws IOException {
         Artist artist = artistRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Khong tim thay artist co id: " + id));
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Khong tim thay artist co id: " + id));
 
         storageService.delete(artist.getImageUrl(), StorageFolder.ARTIST);
         artistRepository.delete(artist);
