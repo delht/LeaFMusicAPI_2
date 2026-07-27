@@ -16,6 +16,7 @@ import de.lht.leafmusic3.service.ArtistService;
 //import de.lht.leafmusic3.service.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,16 +31,32 @@ import java.util.List;
 public class ArtistController {
     private final ArtistService artistService;
 
-    @GetMapping("/all")
-    public List<ArtistDTO> getArtists() {
-        List<ArtistDTO> artists = artistService.getAllArtists();
-        System.out.println(artists);
-        return artists;
+    @GetMapping("/v1/all")
+    public ResponseEntity<ApiResponse<Page<ArtistDTO>>> getArtists(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        HttpStatus.OK,
+                        "Danh sách tất cả nghệ sĩ",
+                        artistService.getAllArtists(page, size)
+                )
+        );
     }
 
     @GetMapping("/v2/all")
-    public List<Artist2DTO> getAllArtistsV2() {
-        return artistService.getAllArtist2();
+    public ResponseEntity<ApiResponse<Page<Artist2DTO>>> getAllArtistsV2(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        HttpStatus.OK,
+                        "Danh sách tất cả nghệ sĩ",
+                        artistService.getAllArtist2(page, size)
+                )
+        );
     }
 
     @GetMapping("/{id}")

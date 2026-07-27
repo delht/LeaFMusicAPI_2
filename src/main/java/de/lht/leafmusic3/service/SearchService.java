@@ -31,6 +31,7 @@ public class SearchService {
     private final GenreMapper genreMapper;
     private final GenreRepository genreRepository;
 
+    //TODO xem lại
     public SearchResultDTO searchByName(String keyword) {
         List<SongDTO> songs = songMapper.toDTOs(songRepository.findByNameContainingIgnoreCase(keyword));
         List<ArtistDTO> artists = artistMapper.toDTOs(artistRepository.findByNameContainingIgnoreCase(keyword));
@@ -39,6 +40,7 @@ public class SearchService {
         return new SearchResultDTO(songs, artists, albums);
     }
 
+    //TODO xem lại
     public SearchResultDTO2 searchByName2(String keyword) {
         List<SongDTO> songs = songMapper.toDTOs(songRepository.findByNameContainingIgnoreCase(keyword));
         List<ArtistDTO> artists = artistMapper.toDTOs(artistRepository.findByNameContainingIgnoreCase(keyword));

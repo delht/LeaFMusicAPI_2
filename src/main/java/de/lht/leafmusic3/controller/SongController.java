@@ -11,6 +11,7 @@ import de.lht.leafmusic3.entity.Song;
 import de.lht.leafmusic3.service.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +27,23 @@ import java.util.List;
 public class SongController {
     private final SongService songService;
 
+//    @GetMapping("/all")
+//    public List<SongDTO> getSongs() {
+//        List<SongDTO> songs = songService.getAllSongs();
+//        return songs;
+//    }
     @GetMapping("/all")
-    public List<SongDTO> getSongs() {
-        List<SongDTO> songs = songService.getAllSongs();
-        return songs;
+    public ResponseEntity<ApiResponse<Page<SongDTO>>> getAllSongs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        HttpStatus.OK,
+                        "Danh sách tất cả bài hát",
+                        songService.getAllSongs(page, size)
+                )
+        );
     }
 
     @GetMapping("/{id}")

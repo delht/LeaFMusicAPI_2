@@ -10,6 +10,7 @@ import de.lht.leafmusic3.entity.Album;
 import de.lht.leafmusic3.service.AlbumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,16 +26,32 @@ public class AlbumController {
 
     private final AlbumService albumService;
 
-    @GetMapping("/all")
-    public List<AlbumDTO> getAlbums() {
-        List<AlbumDTO> albums = albumService.getAllAlbums();
-        System.out.println("Data: " + albums);
-        return albums;
+    @GetMapping("/v1/all")
+    public ResponseEntity<ApiResponse<Page<AlbumDTO>>> getAlbums(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        HttpStatus.OK,
+                        "Danh sách tất cả album",
+                        albumService.getAllAlbums(page, size)
+                )
+        );
     }
 
     @GetMapping("/v2/all")
-    public List<Album2DTO> getAllAlbumsV2() {
-        return albumService.getAllAlbums2();
+    public ResponseEntity<ApiResponse<Page<Album2DTO>>> getAllAlbumsV2(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        HttpStatus.OK,
+                        "Danh sách tất cả album",
+                        albumService.getAllAlbums2(page, size)
+                )
+        );
     }
 
     @GetMapping("/artist/{id}")

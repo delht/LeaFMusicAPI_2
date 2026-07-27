@@ -12,6 +12,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,14 +34,16 @@ public class AlbumService {
     private final AlbumMapper albumMapper;
 
 
-    public List<AlbumDTO> getAllAlbums() {
-        List<Album> albums = albumRepository.findAll();
-        return albumMapper.toDTOs(albums);
+    public Page<AlbumDTO> getAllAlbums(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Album> albumsPage = albumRepository.findAll(pageable);
+        return albumsPage.map(albumMapper::toDTO);
     }
 
-    public List<Album2DTO> getAllAlbums2() {
-        List<Album2DTO> albums = albumRepository.findAllAlbum();
-        return albums;
+    public Page<Album2DTO> getAllAlbums2(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Album2DTO> albumsPage = albumRepository.findAllAlbum(pageable);
+        return albumsPage;
     }
 
     public List<AlbumDTO> getAlbumsByArtist(int artistId) {
