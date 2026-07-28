@@ -16,25 +16,43 @@ public class JwtUtil {
 
     // Thời gian hết hạn của token (có thể cấu hình trong application.yaml)
     // @Value("${jwt.expiration}")
-    private long EXPIRATION = 86400; // 24 giờ = 86400 giây
+    // default expirations in seconds
+    private long ACCESS_EXPIRATION = 15 * 60; // 15 minutes
+    private long REFRESH_EXPIRATION = 7 * 24 * 3600; // 7 days
 
     private Key getSignKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
     public String generateToken(String username, String idUser, String email) {
-        Date now = new Date();
-        Date expirationTime = new Date(now.getTime() + EXPIRATION * 1000);  // Chuyển đổi sang milliseconds
+        // Legacy: generate access token with default access expiration
+        return generateAccessToken(username, idUser, email);
+    }
 
-        // Log thông tin về thời gian hết hạn của token
-        System.out.println("Token issued at: " + now);
-        System.out.println("Token will expire at: " + expirationTime);
+    public String generateAccessToken(String username, String idUser, String email) {
+        Date now = new Date();
+        Date expirationTime = new Date(now.getTime() + ACCESS_EXPIRATION * 1000);
 
         return Jwts.builder()
                 .setSubject(username)
                 .claim("idUser", idUser)
                 .claim("email", email)
-//                .claim("role", role)
+                .claim("tokenType", "access")
+                .setIssuedAt(now)
+                .setExpiration(expirationTime)
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateRefreshToken(String username, String idUser, String email) {
+        Date now = new Date();
+        Date expirationTime = new Date(now.getTime() + REFRESH_EXPIRATION * 1000);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("idUser", idUser)
+                .claim("email", email)
+                .claim("tokenType", "refresh")
                 .setIssuedAt(now)
                 .setExpiration(expirationTime)
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
@@ -61,5 +79,23 @@ public class JwtUtil {
             System.out.println("Invalid token: " + e.getMessage());
         }
         return false;
+    }
+
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public String getTokenType(String token) {
+        try {
+            Claims claims = extractAllClaims(token);
+            Object t = claims.get("tokenType");
+            return t != null ? t.toString() : null;
+        } catch (JwtException e) {
+            return null;
+        }
     }
 }

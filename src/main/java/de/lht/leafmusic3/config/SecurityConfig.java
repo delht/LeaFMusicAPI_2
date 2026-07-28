@@ -23,13 +23,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints - không cần JWT
-                        .requestMatchers("/users/register", "/users/login").permitAll()
+                        .requestMatchers("/users/register", "/users/login", "/auth/refresh", "/auth/google/**").permitAll()
 //                        .requestMatchers("/songs/**", "/albums/**", "/artists/**", "/genres/**", "/search/**").permitAll()
                         .requestMatchers("/songs/**", "/albums/**", "/artists/**", "/genres/all", "/search/**").permitAll()
 
                         // Private endpoints - cần JWT
                         .requestMatchers("/users/**", "/favoritelists/**").authenticated()
-                        .requestMatchers("/auth/**").authenticated()
 
                         // Mọi request khác cũng cho phép nếu bạn muốn
                         .anyRequest().permitAll()

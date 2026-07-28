@@ -33,13 +33,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            username = jwtUtil.extractUsername(token);
+            try {
+                username = jwtUtil.extractUsername(token);
+            } catch (Exception e) {
+                // invalid token or parse error - leave username null
+                username = null;
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var userDetails = userDetailService.loadUserByUsername(username);
 
-            if (jwtUtil.validateToken(token)) {
+            // Only authenticate when token is a valid access token
+            String type = jwtUtil.getTokenType(token);
+            if ("access".equals(type) && jwtUtil.validateToken(token)) {
                 var authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );
