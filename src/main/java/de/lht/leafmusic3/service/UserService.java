@@ -35,7 +35,7 @@
             return userMapper.toDTOs(users);
         }
 
-        public UserAccount registerUser(String email, String password) {
+        public LoginResponse registerUser(String email, String password) {
 
             String hashedPassword = encoder.encode(password);
 
@@ -50,7 +50,22 @@
             account.setPassWord(hashedPassword);
             account.setEmail(email);
             account.setRole(Role.USER);
-            return userRepository.save(account);
+            userRepository.save(account);
+
+            String accessToken = jwtUtil.generateAccessToken(account.getUserName(), account.getIdUser(), account.getEmail());
+            String refreshToken = jwtUtil.generateRefreshToken(account.getUserName(), account.getIdUser(), account.getEmail());
+
+            return new LoginResponse(
+                    accessToken,
+                    refreshToken,
+                    account.getUserName(),
+                    account.getIdUser(),
+                    account.getEmail(),
+                    String.valueOf(account.getRole()),
+                    account.getIdArtist(),
+                    account.getUpload()
+            );
+
         }
 
         public LoginResponse login(String email, String password) {
@@ -58,7 +73,16 @@
             if (!encoder.matches(password, user.getPassWord())) { throw new AppException(HttpStatus.UNAUTHORIZED, "Email hoặc mật khẩu không đúng"); }
             String accessToken = jwtUtil.generateAccessToken(user.getUserName(), user.getIdUser(), user.getEmail());
             String refreshToken = jwtUtil.generateRefreshToken(user.getUserName(), user.getIdUser(), user.getEmail());
-            return new LoginResponse(accessToken, refreshToken, user.getUserName(), user.getIdUser(), user.getEmail(), String.valueOf(user.getRole()), user.getIdArtist(), user.getUpload());
+            return new LoginResponse(
+                    accessToken,
+                    refreshToken,
+                    user.getUserName(),
+                    user.getIdUser(),
+                    user.getEmail(),
+                    String.valueOf(user.getRole()),
+                    user.getIdArtist(),
+                    user.getUpload()
+            );
         }
 
         public void changePassword(ChangePassword changePassword) {

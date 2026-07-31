@@ -40,7 +40,9 @@ server:
 
 jwt:
   secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION}
+  expiration:
+    access-token: ${ACCESS_EXPIRATION}
+    refresh-token: ${REFRESH_EXPIRATION}
 
 cloudinary:
   cloud_name: ${CLOUDINARY_CLOUD_NAME}

@@ -1,4 +1,4 @@
-package de.lht.leafmusic3.service;
+package de.lht.leafmusic3.config;
 
 import de.lht.leafmusic3.entity.UserAccount;
 import de.lht.leafmusic3.repository.UserRepository;

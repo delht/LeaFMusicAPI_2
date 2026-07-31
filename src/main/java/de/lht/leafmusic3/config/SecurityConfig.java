@@ -1,12 +1,14 @@
 package de.lht.leafmusic3.config;
 
-import de.lht.leafmusic3.service.UserDetailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,24 +22,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) //Vô hiệu hóa csrf
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //không lưu Session (Stateless)
+
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints - không cần JWT
+
                         .requestMatchers("/users/register", "/users/login", "/auth/refresh", "/auth/google/**").permitAll()
-//                        .requestMatchers("/songs/**", "/albums/**", "/artists/**", "/genres/**", "/search/**").permitAll()
                         .requestMatchers("/songs/**", "/albums/**", "/artists/**", "/genres/all", "/search/**").permitAll()
 
-                        // Private endpoints - cần JWT
                         .requestMatchers("/users/**", "/favoritelists/**").authenticated()
 
-                        // Mọi request khác cũng cho phép nếu bạn muốn
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
+
         return http.build();
     }
 
+    //Tạm thời chưa dùng
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

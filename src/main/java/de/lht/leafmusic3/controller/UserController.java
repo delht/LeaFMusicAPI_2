@@ -4,6 +4,7 @@ package de.lht.leafmusic3.controller;
 import de.lht.leafmusic3.dto.ApiResponse;
 import de.lht.leafmusic3.dto.user.ChangePassword;
 import de.lht.leafmusic3.dto.user.LoginResponse;
+import de.lht.leafmusic3.dto.user.RegisterRequest;
 import de.lht.leafmusic3.dto.user.UserDTO;
 import de.lht.leafmusic3.entity.UserAccount;
 import de.lht.leafmusic3.service.UserService;
@@ -37,8 +38,12 @@ public class UserController {
 //    =======================================================================
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserAccount user) {
-        UserAccount account = userService.registerUser(user.getEmail(), user.getPassWord());
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+
+        LoginResponse account = userService.registerUser(
+                request.getEmail(),
+                request.getPassword());
+
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         HttpStatus.OK,
